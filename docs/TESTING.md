@@ -1,6 +1,6 @@
 # Testing
 
-The public 1.5.1 candidate passed 51 checks locally on November 12, 2026, using Chromium 158.0.8127.18. There were no page JavaScript errors. The checks include:
+The public 1.5.2 candidate passed 51 checks locally on November 12, 2026, using Chromium 158.0.8127.18. There were no page JavaScript errors. The checks include:
 
 - 22 integration checks, including all 15 effects reaching a real WebRTC receiver, voice and effect frequencies arriving together, effects-only mode, mute, track changes, imports, keyboard use, layout, and accessibility.
 - 6 failure-handling checks, including rejected mixer connections, interrupted operations, paused senders, screen audio, and camera tracks.
@@ -13,6 +13,8 @@ Run `npm test` to produce fresh reports. The tests use local pages served by Pla
 The dependency audit reported no known vulnerabilities. This does not replace code review. The runtime has no npm dependencies.
 
 The package script checks the manifest, allowed files, JavaScript syntax, media metadata, ZIP contents, and checksum. It does not claim tests have passed based on old report files.
+
+Studio sound automation and its tests are kept on the separate [`experimental/studio-sound`](https://github.com/nschechter/meet-soundboard/tree/experimental/studio-sound) branch. They are excluded from this candidate. The earlier beta live-test results do not verify this store package.
 
 ## Required live check before store submission
 
@@ -29,4 +31,4 @@ Load the exact unpacked contents of the store ZIP into a clean Chrome profile. U
 
 Repeat with Meet noise cancellation or Studio sound disabled. Record the browser version, operating system, audio device, and result without recording anyone's private conversation.
 
-This live check has not been completed for the public 1.5.1 candidate. Earlier successful testing of a different local version does not count as release verification for this one.
+This live check has not been completed for the public 1.5.2 candidate. Earlier successful testing of a different local version does not count as release verification for this one.

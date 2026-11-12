@@ -17,7 +17,7 @@ The extension folder is ready to load. No build step or extra audio driver is ne
 
 The small waveform button sits beside Meet’s bottom controls. Hover over it to see **Soundboard**. In narrow windows, it moves above the controls so it does not cover them.
 
-Join a call, leave your Meet microphone on, open **Soundboard**, and click **Turn on**. Click a sound card to play it to the call. Turn off Meet's noise cancellation or Studio sound if it filters out effects.
+Join a call, leave your Meet microphone on, open **Soundboard**, and click **Turn on**. Click a sound card to play it to the call. Turn off Meet's noise cancellation or Studio sound if it filters out effects. The extension does not change those settings for you.
 
 - The small **▷** button previews a sound on your device.
 - **Include my voice** controls whether your voice joins the effects. It only applies while the soundboard is on.
@@ -43,6 +43,8 @@ If audio behaves unexpectedly, turn the soundboard off. Reloading the extension 
 
 ## Development
 
+Studio sound automation is an unfinished experiment on the [`experimental/studio-sound`](https://github.com/nschechter/meet-soundboard/tree/experimental/studio-sound) branch. It is excluded from `main` and the store candidate.
+
 Use Node.js 22.12 or newer:
 
 ```sh
@@ -62,4 +64,6 @@ See [testing](docs/TESTING.md) and the [release review](docs/RELEASE-REVIEW.md) 
 
 ## Source and audio rights
 
-No source-code license has been selected yet. Publishing this repository does not grant an open-source license. The third-party audio has separate CC0 terms, listed in [SOUND-CREDITS.txt](extension/SOUND-CREDITS.txt). Third-party development packages retain their own licenses.
+The project's code and documentation use the [MIT License](LICENSE). Copyright (c) 2026 Noah Schechter. You can use, modify, and redistribute the code, including commercially, provided you keep the copyright and license notice. Modified versions do not have to publish their source code.
+
+The third-party audio keeps its separate CC0 terms, listed in [SOUND-CREDITS.txt](extension/SOUND-CREDITS.txt). Third-party development packages retain their own licenses. The MIT license does not grant rights to movie, TV, or other recordings you may import.

@@ -28,7 +28,6 @@ Content scripts on `https://meet.google.com/*` display the panel and mix chosen 
 - An accurate privacy dashboard declaration covering local clip storage, audio processing, and the intentional transfer into Meet and to meeting participants. Do not claim that the extension never handles user data.
 - Screenshots and store artwork from the public build, with no private meeting content.
 - A fresh test of the exact store ZIP in a real Meet call with a second participant.
-- A source-code license decision before describing the public repository as open source. Private security reporting is already enabled on GitHub.
 - A Chrome Web Store developer account and the required account setup.
 
 This document is a draft. Nothing has been submitted to the store.

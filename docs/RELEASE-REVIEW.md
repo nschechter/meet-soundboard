@@ -1,5 +1,9 @@
 # Release review
 
+The current 1.5.2 candidate excludes Studio sound automation. That experiment is kept on the separate [`experimental/studio-sound`](https://github.com/nschechter/meet-soundboard/tree/experimental/studio-sound) branch. The main extension does not open or change Meet audio settings. The review below describes the earlier 1.5.1 source release. The exact public store ZIP still needs the full separate-device checklist in [TESTING.md](TESTING.md).
+
+The project's code and documentation now use the MIT License. The bundled effects retain their separate CC0 terms. The extension ZIP includes both the code license and the audio credits.
+
 Reviewed November 12, 2026. The starting point was the local 1.5.0 package. The prepared public copy is 1.5.1.
 
 The original package was not ready for public distribution or store submission. The public copy fixes the findings below and is ready for source review. Store submission still needs the checks listed at the end.
@@ -48,9 +52,8 @@ These were three review passes on the same code, not three independent external 
 
 - The audio engine shares the Meet page's MAIN world. Same-window message checks do not authenticate scripts in that page. A compromised Meet page or another extension with page access can interfere with the mixer. This is documented in [SECURITY.md](../SECURITY.md). Adding a random message token would not isolate the audio engine from its host page. [Chrome documents this execution-world boundary](https://developer.chrome.com/docs/extensions/reference/manifest/content-scripts#world).
 - All 51 automated checks passed on Chromium 158. These use local Meet-origin fixtures, not Google's live application. Test the exact ZIP with a second participant in a real Meet call before submission, including voice and effects together, voice excluded, Meet mute, microphone changes, and recovery after interruption.
-- Chrome 114 is the API floor. This candidate has not been tested across the full range of supported Chrome versions or operating systems. The GitHub workflow is prepared but has not run yet.
+- Chrome 114 is the API floor. The 1.5.1 checks passed locally on macOS and in the [Linux GitHub workflow](https://github.com/nschechter/meet-soundboard/actions/runs/43286338766). Other supported browser versions and operating systems have not been checked.
 - The public privacy and support URLs, store dashboard disclosures, store artwork, and developer account setup still need to be completed.
-- Choose a source-code license before describing this as open source. Public source can be published without granting a license, but that is a different choice.
 - Compressed audio can consume more memory after decoding than its file size suggests. Both validation and playback enforce duration after decoding. The byte limit reduces exposure but is not a fixed decoded-memory limit.
 
 No guarantee of store approval or absence of all vulnerabilities is made. The current installed copy was not replaced during this review.

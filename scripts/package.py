@@ -31,15 +31,18 @@ assert 'quote_' not in (extension / 'audio.js').read_text()
 destination = root / 'dist'
 destination.mkdir(exist_ok=True)
 archive_path = destination / f"meet-soundboard-{manifest['version']}.zip"
+package_files = {name: extension / name for name in expected}
+package_files['LICENSE'] = root / 'LICENSE'
 with zipfile.ZipFile(archive_path, 'w', zipfile.ZIP_DEFLATED) as archive:
-    for name in sorted(expected):
+    for name, file in sorted(package_files.items()):
         entry = zipfile.ZipInfo(name, date_time=(2026, 1, 1, 0, 0, 0))
         entry.compress_type = zipfile.ZIP_DEFLATED
         entry.external_attr = 0o644 << 16
-        archive.writestr(entry, (extension / name).read_bytes())
+        archive.writestr(entry, file.read_bytes())
 with zipfile.ZipFile(archive_path) as archive:
     assert archive.testzip() is None
     assert 'manifest.json' in archive.namelist()
+    assert archive.read('LICENSE') == (root / 'LICENSE').read_bytes()
 digest = hashlib.sha256(archive_path.read_bytes()).hexdigest()
 (destination / 'SHA256SUMS.txt').write_text(f'{digest}  {archive_path.name}\n')
-print(f'Packaged {len(expected)} files into {archive_path.name}. Run npm test before release.')
+print(f'Packaged {len(package_files)} files into {archive_path.name}. Run npm test before release.')

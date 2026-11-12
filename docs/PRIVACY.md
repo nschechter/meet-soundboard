@@ -1,6 +1,6 @@
 # Privacy policy
 
-Updated November 12, 2026. Applies to the public Meet Soundboard release candidate, version 1.5.1.
+Updated November 12, 2026. Applies to the public Meet Soundboard release candidate, version 1.5.2.
 
 Meet Soundboard adds sound effects to your outgoing Google Meet audio. The developer does not run a server for the extension and does not receive your audio, clips, or settings.
 
