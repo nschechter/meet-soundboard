@@ -3,12 +3,13 @@
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Meet Soundboard privacy</title></head>
 <body style="max-width:720px;margin:40px auto;padding:24px;font:16px/1.6 system-ui">
 <h1>Privacy policy</h1>
-<p>Updated November 12, 2026. Applies to the public Meet Soundboard release candidate, version 1.5.1.</p>
+<p>Updated November 12, 2026. Applies to the public Meet Soundboard development preview, version 1.6.0.</p>
 <p>Meet Soundboard adds sound effects to your outgoing Google Meet audio. The developer does not run a server for the extension and does not receive your audio, clips, or settings.</p>
 <h2>Microphone and meeting audio</h2>
 <p>When you turn on the soundboard, it processes Meet&#x27;s existing outgoing audio track in your browser. It combines your microphone with the effect you select, unless you turn off Include my voice. Google Meet sends that audio through the meeting to participants, under Google&#x27;s own data practices. The extension does not record or save microphone or meeting audio.</p>
 <p>Meet&#x27;s microphone permission still applies. The extension does not request separate microphone access or bypass Meet mute. Turning off the soundboard restores your original microphone track, including your voice.</p>
 <h2>Custom sounds and settings</h2>
+<p>If you enable Studio sound automation, the extension reads and changes Meet's Studio sound or noise cancellation switch during playback, then attempts to restore it. This option and the prior switch state stay in memory for the current tab. They are not sent to the developer or saved in extension storage. Changing the switch changes your audio setting in Google Meet.</p>
 <p>Clips you choose to add are checked in the extension and saved in Chrome&#x27;s local extension storage with their names and durations. Volume, voice, and local playback preferences are saved there too. The extension does not use Chrome sync storage.</p>
 <p>The panel displays clip names within the Meet page. When you preview or play a clip, its audio bytes pass into the Meet page&#x27;s audio mixer. Preview audio is played only on your device by the extension. Playing to the meeting sends the clip to participants. The Meet page can access those bytes once they enter its context. A preview can also be picked up by your physical microphone if you use speakers.</p>
 <p>Use each clip&#x27;s delete button to remove it from the saved library. Uninstalling the extension removes its local saved data. Audio already sent to participants cannot be recalled by deleting the local clip.</p>

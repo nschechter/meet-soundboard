@@ -36,6 +36,7 @@
   let includeVoice = true;
   let microphoneObserved = false;
   let playing;
+  let playbackRequestId;
   let playbackGeneration = 0;
   let lastError = "";
   let activationGeneration = 0;
@@ -343,7 +344,14 @@
       source.disconnect();
       previewGain?.disconnect();
     }
+    finishRequest();
     publish();
+  }
+
+  function finishRequest() {
+    const requestId = playbackRequestId;
+    playbackRequestId = null;
+    if (requestId) emit("playback-ended", { requestId });
   }
 
   async function loadBuffer(message) {
@@ -375,6 +383,7 @@
 
   async function play(message) {
     stopPlayback();
+    playbackRequestId = typeof message.requestId === "string" && message.requestId.length <= 80 ? message.requestId : null;
     const generation = playbackGeneration;
     createContext();
     await context.resume();
@@ -400,7 +409,10 @@
     function finish() {
       source.disconnect();
       previewGain?.disconnect();
-      if (playing?.source === source) playing = null;
+      if (playing?.source === source) {
+        playing = null;
+        finishRequest();
+      }
       publish();
     }
     playing = { source, previewGain, id: message.id || message.builtin, preview: !!message.preview };
@@ -451,6 +463,7 @@
     if (!message || message.channel !== channel || message.from !== "panel") return;
     if (message.type === "play" && (typeof message.id !== "string" || message.id.length > 80 || typeof message.preview !== "boolean")) return;
     command(message).catch((error) => {
+      if (message.type === "play" && message.requestId === playbackRequestId) stopPlayback();
       emit("error", { message: error.message || "Audio could not be played.", requestId: message.requestId });
       publish();
     });

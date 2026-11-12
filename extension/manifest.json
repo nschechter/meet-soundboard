@@ -1,7 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Meet Soundboard",
-  "version": "1.5.1",
+  "version": "1.6.0",
+  "version_name": "1.6.0 Studio sound beta",
   "description": "A soundboard inside Google Meet. Play classic reaction sounds or your own clips into your meeting audio.",
   "minimum_chrome_version": "114",
   "permissions": [
@@ -36,6 +37,7 @@
       "js": [
         "sounds.js",
         "panel-style.js",
+        "studio.js",
         "panel.js"
       ],
       "run_at": "document_idle",

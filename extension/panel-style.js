@@ -39,6 +39,8 @@ globalThis.MeetSoundboardStyle = `
   .connection[data-state="muted"] .dot, .connection[data-state="waiting"] .dot, .connection[data-state="paused"] .dot { background: #b98425; }
   .status-title { font-size: 12px; font-weight: 650; flex: 1; }
   .power { padding: 5px 9px; font-size: 11px; font-weight: 650; border: 1px solid #c5d2b1; border-radius: 6px; background: #f8faef; }
+  .restore-studio { margin: 10px 0 0 15px; padding: 6px 10px; border: 1px solid #a77945; border-radius: 6px; background: #fff2de; color: #68441e; font-size: 11px; }
+  .beta { margin-left: 5px; padding: 2px 5px; border-radius: 4px; background: #ece7d7; color: #675536; font-size: 9px; }
   .status-help { font-size: 11px; color: #5c694f; margin: 7px 0 0 15px; line-height: 1.5; }
   .tabs { display: flex; border-bottom: 1px solid #e0e5d8; margin: 18px 0 14px; gap: 16px; }
   .tab { border: 0; background: transparent; padding: 0 0 10px; color: #64705b; font-size: 12px; font-weight: 600; border-bottom: 2px solid transparent; }

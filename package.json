@@ -4,7 +4,8 @@
     "playwright": "1.65.0"
   },
   "name": "meet-soundboard",
-  "version": "1.5.1",
+  "version": "1.6.0",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "test": "node tests/run-tests.mjs",

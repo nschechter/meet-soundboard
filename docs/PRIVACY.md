@@ -1,6 +1,6 @@
 # Privacy policy
 
-Updated November 12, 2026. Applies to the public Meet Soundboard release candidate, version 1.5.1.
+Updated November 12, 2026. Applies to the public Meet Soundboard development preview, version 1.6.0.
 
 Meet Soundboard adds sound effects to your outgoing Google Meet audio. The developer does not run a server for the extension and does not receive your audio, clips, or settings.
 
@@ -13,6 +13,8 @@ Meet's microphone permission still applies. The extension does not request separ
 ## Custom sounds and settings
 
 Clips you choose to add are checked in the extension and saved in Chrome's local extension storage with their names and durations. Volume, voice, and local playback preferences are saved there too. The extension does not use Chrome sync storage.
+
+If you enable Studio sound automation, the extension reads and changes Meet's Studio sound or noise cancellation switch during playback, then attempts to restore it. This option and the prior switch state stay in memory for the current tab. They are not sent to the developer or saved in extension storage. Changing the switch changes your audio setting in Google Meet.
 
 The panel displays clip names within the Meet page. When you preview or play a clip, its audio bytes pass into the Meet page's audio mixer. Preview audio is played only on your device by the extension. Playing to the meeting sends the clip to participants. The Meet page can access those bytes once they enter its context. A preview can also be picked up by your physical microphone if you use speakers.
 

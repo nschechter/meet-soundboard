@@ -2,7 +2,7 @@
 
 A Chrome extension that adds a soundboard to Google Meet. Play classic reactions or your own clips through your meeting audio, without sharing your screen.
 
-This is a release candidate. It has not been published to the Chrome Web Store. It is an independent project and is not made or endorsed by Google or Discord.
+This is the experimental Studio sound branch. Use [main](https://github.com/nschechter/meet-soundboard/tree/main) for the store candidate without automatic settings changes. It has not been published to the Chrome Web Store. It is an independent project and is not made or endorsed by Google or Discord.
 
 ## Install
 
@@ -33,6 +33,14 @@ The included effects are Air horn, Applause, Ba dum tss, Correct!, BOOOOO!, Egg 
 
 Movie, TV, and internet quote recordings are not bundled in this public version. Add your own clips only when you have permission to use them.
 
+## Studio sound automation (beta)
+
+Open **Studio sound automation** below the sound cards and check **Auto-pause Studio sound**. This is off by default and applies only to the current tab. The extension opens Meet's audio settings, turns Studio sound or noise cancellation off before an effect, and restores it after playback or Stop. If it was already off, it stays off. Local previews do not pause Studio sound.
+
+This beta uses Meet's English interface. It opens visible settings dialogs and delays the start of an effect. A live test confirmed automatic switching and audio reaching a second Meet session with voice included and excluded. The full store release checks are still required, including listening on a separate device for clipped beginnings or endings. See [testing](docs/TESTING.md).
+
+If the switch cannot be found or turned off, the effect is cancelled. A failed restore shows **Restore Studio sound** below the connection status. A manual change to the switch stops playback and keeps the user's choice. Closing or reloading the tab during playback can prevent restoration. Check Meet's audio settings afterward if that happens.
+
 ## Privacy and limits
 
 The extension works only on `https://meet.google.com/*`. It uses Meet's existing microphone tracks. It does not record calls, send analytics, or send audio to the developer. Read the [privacy policy](docs/PRIVACY.md) and [security notes](SECURITY.md).
@@ -62,4 +70,6 @@ See [testing](docs/TESTING.md) and the [release review](docs/RELEASE-REVIEW.md) 
 
 ## Source and audio rights
 
-No source-code license has been selected yet. Publishing this repository does not grant an open-source license. The third-party audio has separate CC0 terms, listed in [SOUND-CREDITS.txt](extension/SOUND-CREDITS.txt). Third-party development packages retain their own licenses.
+The project's code and documentation use the [MIT License](LICENSE). Copyright (c) 2026 Noah Schechter. You can use, modify, and redistribute the code, including commercially, provided you keep the copyright and license notice. Modified versions do not have to publish their source code.
+
+The third-party audio keeps its separate CC0 terms, listed in [SOUND-CREDITS.txt](extension/SOUND-CREDITS.txt). Third-party development packages retain their own licenses. The MIT license does not grant rights to movie, TV, or other recordings you may import.

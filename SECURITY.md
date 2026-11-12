@@ -4,6 +4,8 @@ The extension uses only the `storage` permission and runs only on `https://meet.
 
 The panel runs in Chrome's isolated extension world. Saved clips use extension storage. User-supplied filenames are inserted as text, and saved values are checked before use. Synthetic page clicks and keyboard events cannot play or delete saved clips.
 
+Studio sound automation is an optional prototype that reads and clicks labeled controls in Meet's page. It requires a real user action to enable it for each tab. It uses no extra permissions and does not read account details or call content. The page owns those controls, so this is not a security boundary against a compromised Meet page. The feature does not call private Google endpoints. A tab crash, close, or reload can prevent restoration of the original setting.
+
 The audio engine runs in the Meet page's MAIN world so it can work with WebRTC senders. That world is not isolated from Meet scripts or other extensions with access to Meet. The same-window message channel filters other frames but does not authenticate scripts within the Meet page. Page scripts can issue mixer commands or forge status updates. The extension cannot protect a microphone stream from the page that already owns it. A random message token would not make this boundary secure.
 
 Imported clips are decoded in the isolated world and remain in extension storage until previewed or played. At that point, the audio bytes enter the Meet page. Do not use confidential clips if you do not trust that page or other extensions running on it.
