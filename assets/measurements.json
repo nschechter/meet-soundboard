@@ -1,0 +1,122 @@
+[
+  {
+    "id": "airhorn",
+    "duration": 2.009,
+    "gain": 0.867,
+    "peak": 0.5356,
+    "bytes": 33061,
+    "start": 0
+  },
+  {
+    "id": "applause",
+    "duration": 3.2,
+    "gain": 1.294,
+    "peak": 0.79,
+    "bytes": 52287,
+    "start": 1.5
+  },
+  {
+    "id": "rimshot",
+    "duration": 2.15,
+    "gain": 0.701,
+    "peak": 0.4923,
+    "bytes": 35569,
+    "start": 4.48
+  },
+  {
+    "id": "ding",
+    "duration": 1.6,
+    "gain": 0.573,
+    "peak": 0.79,
+    "bytes": 26792,
+    "start": 0
+  },
+  {
+    "id": "boo",
+    "duration": 3.8,
+    "gain": 2.833,
+    "peak": 0.79,
+    "bytes": 61901,
+    "start": 0.94
+  },
+  {
+    "id": "eggs",
+    "duration": 1.381,
+    "gain": 0.771,
+    "peak": 0.79,
+    "bytes": 23030,
+    "start": 0
+  },
+  {
+    "id": "tomato",
+    "duration": 1.381,
+    "gain": 0.686,
+    "peak": 0.79,
+    "bytes": 23030,
+    "start": 0
+  },
+  {
+    "id": "scratch",
+    "duration": 0.85,
+    "gain": 0.432,
+    "peak": 0.6509,
+    "bytes": 14671,
+    "start": 0.4
+  },
+  {
+    "id": "buzzer",
+    "duration": 0.61,
+    "gain": 1.155,
+    "peak": 0.7542,
+    "bytes": 10910,
+    "start": 0.035
+  },
+  {
+    "id": "laugh",
+    "duration": 2.05,
+    "gain": 1.541,
+    "peak": 0.79,
+    "bytes": 33897,
+    "start": 0.57
+  },
+  {
+    "id": "cash",
+    "duration": 1.5,
+    "gain": 0.648,
+    "peak": 0.79,
+    "bytes": 25120,
+    "start": 0.48
+  },
+  {
+    "id": "quack",
+    "duration": 0.383,
+    "gain": 0.613,
+    "peak": 0.7704,
+    "bytes": 7148,
+    "start": 0
+  },
+  {
+    "id": "crickets",
+    "duration": 2.7,
+    "gain": 5.129,
+    "peak": 0.7497,
+    "bytes": 44346,
+    "start": 1
+  },
+  {
+    "id": "trombone",
+    "duration": 4.68,
+    "gain": 0.675,
+    "peak": 0.6428,
+    "bytes": 76111,
+    "start": 0.22
+  },
+  {
+    "id": "boom",
+    "duration": 1.344,
+    "gain": 0.386,
+    "peak": 0.6365,
+    "bytes": 22612,
+    "start": 0
+  }
+]

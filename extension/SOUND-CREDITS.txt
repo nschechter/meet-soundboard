@@ -1,0 +1,88 @@
+MEET SOUNDBOARD AUDIO CREDITS
+
+The fifteen sound effects listed in this section use CC0 1.0 Universal.
+License: https://creativecommons.org/publicdomain/zero/1.0/
+Checked November 12, 2026.
+
+The bundled audio uses the public high-quality MP3 previews. Changes include
+short excerpts, mono conversion, level adjustment, edge fades, and MP3 encoding.
+Crickets uses a low-frequency filter. BOOOOO! uses light compression and a
+louder level. Egg attack layers egg-crack foley with Cartoon Splat. Tomato
+splat uses Cartoon Splat. Both splat effects repeat three hits with small
+pitch changes. Source credits for these layers are included below.
+All clips use a 35 Hz high-pass filter. No Discord audio or branding is included.
+
+airhorn
+DJ airhorn sound by pfranzen
+https://freesound.org/people/pfranzen/sounds/528807/
+License: CC0 1.0 Universal
+
+applause
+small Applause by kywr
+https://freesound.org/people/kywr/sounds/241985/
+License: CC0 1.0 Universal
+
+rimshot
+Baddum Tish - Comedy Rimshots - classic rim shot.wav by OverlookHotelRecords
+https://freesound.org/people/OverlookHotelRecords/sounds/271208/
+License: CC0 1.0 Universal
+
+crickets
+crickets by FreethinkerAnon
+https://freesound.org/people/FreethinkerAnon/sounds/129678/
+License: CC0 1.0 Universal
+
+trombone
+wah wah sad trombone.wav by kirbydx
+https://freesound.org/people/kirbydx/sounds/175409/
+License: CC0 1.0 Universal
+
+ding
+bell ding 1.wav by 5ro4
+https://freesound.org/people/5ro4/sounds/611113/
+License: CC0 1.0 Universal
+
+quack
+Cartoon - Duck Quack by Breviceps
+https://freesound.org/people/Breviceps/sounds/445960/
+License: CC0 1.0 Universal
+
+boom
+Impact Hit at soft but big material
+https://freesound.org/people/doudar41/sounds/728515/
+License: CC0 1.0 Universal
+
+boo
+CRWDAngr_Booing, Angry_ShaneVincent_GSC24_SpacedOmni-MK012.wav by ShangusBurger
+https://freesound.org/people/ShangusBurger/sounds/764251/
+License: CC0 1.0 Universal
+
+eggs
+Egg Crack by davdud101
+https://freesound.org/people/davdud101/sounds/150479/
+License: CC0 1.0 Universal
+
+tomato
+Cartoon Splat by Breviceps
+https://freesound.org/people/Breviceps/sounds/445117/
+License: CC0 1.0 Universal
+
+scratch
+Record Scratch #1 by musicvision31
+https://freesound.org/people/musicvision31/sounds/431774/
+License: CC0 1.0 Universal
+
+buzzer
+Wrong Answer / Incorrect / Error by Beetlemuse
+https://freesound.org/people/Beetlemuse/sounds/528956/
+License: CC0 1.0 Universal
+
+laugh
+Crowd laugh.wav by deleted_user_2104797
+https://freesound.org/people/deleted_user_2104797/sounds/324894/
+License: CC0 1.0 Universal
+
+cash
+Cha Ching.wav by deleted_user_96253
+https://freesound.org/people/deleted_user_96253/sounds/351304/
+License: CC0 1.0 Universal

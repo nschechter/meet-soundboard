@@ -1,0 +1,17 @@
+{
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "playwright": "1.65.0"
+  },
+  "name": "meet-soundboard",
+  "version": "1.5.1",
+  "private": true,
+  "scripts": {
+    "test": "node tests/run-tests.mjs",
+    "build:audio": "python3 scripts/build-audio.py",
+    "package": "python3 scripts/package.py"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
