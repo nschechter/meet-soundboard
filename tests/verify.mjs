@@ -120,9 +120,8 @@ try {
       await received;
     });
     await page.waitForFunction(() => window.test.left.connectionState === 'connected');
-    await page.waitForTimeout(700);
     assert.equal(await page.evaluate(() => window.test.sender.track === window.test.track), true);
-    assert.ok(await sample() > .05);
+    await expectAudio(value => value > .05, 'Original microphone reaches receiver before activation');
   });
 
   await check('Local preview does not enter outgoing meeting audio', async () => {
@@ -147,7 +146,7 @@ try {
     await page.waitForTimeout(250);
     assert.ok(await sample() < .005);
     await page.getByRole('button', { name: 'Play Correct! to meeting', exact: true }).click();
-    assert.ok(await sample() > .015);
+    await expectAudio(value => value > .015, 'Effect reaches receiver with voice excluded');
     await page.getByRole('button', { name: '■ Stop all', exact: true }).click();
     await page.waitForTimeout(200);
     assert.ok(await sample() < .005);
@@ -156,7 +155,7 @@ try {
   await check('Meet mute silences both voice and effects immediately', async () => {
     await page.getByLabel('Include my voice', { exact: true }).check();
     await page.getByRole('button', { name: 'Play Air horn to meeting', exact: true }).click();
-    assert.ok(await sample() > .05);
+    await expectAudio(value => value > .05, 'Audio reaches receiver before muting');
     const muted = await page.evaluate(() => {
       window.test.track.enabled = false;
       return !window.test.sender.track.enabled;
@@ -193,7 +192,7 @@ try {
     await page.getByLabel('Include my voice', { exact: true }).uncheck();
     await expectAudio(value => value < .005, 'Voice can be disabled after cloning');
     await page.getByRole('button', { name: 'Play Correct! to meeting', exact: true }).click();
-    assert.ok(await sample() > .01);
+    await expectAudio(value => value > .01, 'Effect reaches receiver after cloning');
     await page.getByRole('button', { name: '■ Stop all', exact: true }).click();
     await page.getByLabel('Include my voice', { exact: true }).check();
   });
@@ -329,9 +328,9 @@ try {
     assert.ok(tones.voice > -40 && tones.effect > -40, JSON.stringify(tones));
     await page.getByRole('button', { name: '■ Stop all', exact: true }).click();
     await page.getByLabel('Include my voice', { exact: true }).uncheck();
-    await page.waitForTimeout(200);
+    await expectAudio(value => value < .005, 'Voice is excluded before playing custom audio');
     await page.getByRole('button', { name: 'Play <test clip> to meeting', exact: true }).click();
-    assert.ok(await sample() > .03);
+    await expectAudio(value => value > .03, 'Custom effect reaches receiver with voice excluded');
     await page.getByRole('button', { name: 'Delete <test clip>', exact: true }).click();
     await page.waitForFunction(() => document.querySelector('#meet-soundboard-root').shadowRoot.querySelectorAll('.custom-grid .sound').length === 0);
     assert.equal(await page.locator('.custom-grid .sound').count(), 0);
