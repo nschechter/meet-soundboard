@@ -60,15 +60,19 @@
     return microphoneObserved && (live.length === 0 || live.every((track) => !track.enabled || track.muted));
   }
 
-  function syncRoute(route) {
-    const meetingUnmuted = !platform?.microphoneState || platform.microphoneState() === "unmuted";
-    const audible = meetingUnmuted && route.input.readyState === "live" && route.input.enabled && !route.input.muted && !microphoneMuted();
+  function meetingMicrophoneState() {
+    return platform?.microphoneState ? platform.microphoneState() : "unmuted";
+  }
+
+  function syncRoute(route, microphoneState = meetingMicrophoneState()) {
+    const audible = microphoneState === "unmuted" && route.input.readyState === "live" && route.input.enabled && !route.input.muted && !microphoneMuted();
     native.enabled.set.call(route.output, audible);
     route.voice.gain.value = !enabled || includeVoice ? 1 : 0;
   }
 
   function syncAll() {
-    for (const route of routes.values()) syncRoute(route);
+    const microphoneState = meetingMicrophoneState();
+    for (const route of routes.values()) syncRoute(route, microphoneState);
   }
 
   function createContext() {
@@ -347,19 +351,20 @@
     return [...result];
   }
 
-  function status() {
-    const live = connectedRoutes(true);
+  function connectionState() {
+    if (!enabled) return "off";
+    if (context?.state !== "running") return "suspended";
+    if (!connectedRoutes(true).length) return "waiting";
+    const microphoneState = meetingMicrophoneState();
+    if (microphoneState === "muted") return "muted";
+    if (microphoneState !== "unmuted") return "unavailable";
     const active = connectedRoutes();
-    const audible = active.filter((route) => route.output.enabled && !route.output.muted);
-    let state = "off";
-    if (enabled) {
-      state = context?.state !== "running" ? "suspended" : !live.length ? "waiting" : !active.length ? "paused" : !audible.length ? "muted" : "ready";
-      if (live.length && context?.state === "running" && platform?.microphoneState) {
-        const microphoneState = platform.microphoneState();
-        if (microphoneState !== "unmuted") state = microphoneState === "muted" ? "muted" : "unavailable";
-      }
-    }
-    return { state, enabled, volume, hearEffects, includeVoice, playing: playing?.id || null, preview: !!playing?.preview, error: lastError };
+    if (!active.length) return "paused";
+    return active.some((route) => route.output.enabled && !route.output.muted) ? "ready" : "muted";
+  }
+
+  function status() {
+    return { state: connectionState(), enabled, volume, hearEffects, includeVoice, playing: playing?.id || null, preview: !!playing?.preview, error: lastError };
   }
 
   let previousStatus = "";
@@ -496,9 +501,9 @@
   });
 
   if (platform?.microphoneState) {
-    let previousMicrophoneState = platform.microphoneState();
+    let previousMicrophoneState = meetingMicrophoneState();
     new MutationObserver(() => {
-      const next = platform.microphoneState();
+      const next = meetingMicrophoneState();
       if (next === previousMicrophoneState) return;
       previousMicrophoneState = next;
       syncAll();

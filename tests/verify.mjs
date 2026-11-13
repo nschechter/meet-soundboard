@@ -315,6 +315,30 @@ try {
       await waitState('ready');
       await page.getByLabel('Hear effects too', { exact: true }).check();
     });
+    await check('Teams mute status takes precedence over paused audio but not suspended audio', async () => {
+      await page.getByLabel('Include my voice', { exact: true }).uncheck();
+      await page.evaluate(async () => {
+        const parameters = test.sender.getParameters();
+        parameters.encodings[0].active = false;
+        await test.sender.setParameters(parameters);
+        document.querySelector('[data-inp="microphone-button"]').dataset.state = 'mic-off';
+      });
+      await waitState('muted');
+      await page.evaluate(() => document.querySelector('[data-inp="microphone-button"]').dataset.state = 'unrecognized');
+      await waitState('unavailable');
+      await page.evaluate(() => reviewContexts.find(context => context !== test.audio).suspend());
+      await waitState('suspended');
+      await page.getByRole('button', { name: 'Resume', exact: true }).click();
+      await waitState('unavailable');
+      await page.evaluate(() => document.querySelector('[data-inp="microphone-button"]').dataset.state = 'mic-volume-renderer');
+      await waitState('paused');
+      await page.evaluate(async () => {
+        const parameters = test.sender.getParameters();
+        parameters.encodings[0].active = true;
+        await test.sender.setParameters(parameters);
+      });
+      await waitState('ready');
+    });
   }
 
   await check('Meeting track mute silences both voice and effects immediately', async () => {
@@ -590,6 +614,16 @@ try {
     await waitState('waiting');
     assert.equal(await page.evaluate(() => window.test.track.readyState), 'live');
   });
+
+  if (teams) {
+    await check('A missing Teams mic control does not hide disconnected or off states', async () => {
+      await page.evaluate(() => document.querySelector('[data-inp="microphone-button"]').remove());
+      await page.getByRole('button', { name: '■ Stop all', exact: true }).click();
+      await waitState('waiting');
+      await page.getByRole('button', { name: 'Turn off', exact: true }).click();
+      await waitState('off');
+    });
+  }
 
   await check('Panel fits a small browser window', async () => {
     for (const viewport of [{ width: 1440, height: 900 }, { width: 1280, height: 720 }, { width: 800, height: 600 }, { width: 390, height: 650 }, { width: 320, height: 480 }]) {
