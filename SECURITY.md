@@ -12,4 +12,4 @@ File size, duration, saved library size, and concurrent playback are limited. Au
 
 The review and automated checks are not a security certification. The exact release still needs a live Meet check before store submission.
 
-For sensitive reports, use [GitHub's private vulnerability reporting](https://github.com/nschechter/meet-soundboard/security/advisories/new). It is enabled for this repository. Do not publish private clips, credentials, or exploit details in public issues.
+For sensitive reports, use [GitHub's private vulnerability reporting](https://github.com/nschechter/meeting-soundboard/security/advisories/new). It is enabled for this repository. Do not publish private clips, credentials, or exploit details in public issues.

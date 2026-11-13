@@ -1,6 +1,8 @@
-# Release review
+# Archived release review: 1.5
 
-The current 1.5.15 build excludes Studio sound automation. That experiment is kept on the separate [`experimental/studio-sound`](https://github.com/nschechter/meet-soundboard/tree/experimental/studio-sound) branch. The main extension does not open or change Meet audio settings. The review below describes the earlier 1.5.1 source release. The exact public store ZIP still needs the full separate-device checklist in [TESTING.md](TESTING.md).
+Historical notes from November 12, 2026, kept for the original findings and test evidence. Version and dashboard status statements below describe that review period. The publisher later reported submitting 1.5.15. Use the current [testing guide](../TESTING.md) and [publishing guide](../STORE-LISTING.md) for current status and instructions.
+
+The current 1.5.15 build excludes Studio sound automation. That experiment is kept on the separate [`experimental/studio-sound`](https://github.com/nschechter/meeting-soundboard/tree/experimental/studio-sound) branch. The main extension does not open or change Meet audio settings. The review below describes the earlier 1.5.1 source release. The exact public store ZIP still needs the full separate-device checklist in [TESTING.md](../TESTING.md).
 
 Version 1.5.15 keeps the editor and makes the requested Golf Clap, Quack, Dramatic boom, Tomato Squash, Awkward cricket, Funny Laugh Track, I'll be back, Punch Effect, and Luigi - Yahoo recordings the standard defaults. Their redistribution clearance is unresolved. The publisher has chosen to retain them. Release packaging requires an explicit --allow-unverified-audio option and keeps the rights disclosures unchanged. A local candidate ZIP is available for review. The exact release package is now saved as the unpublished 1.5.15 store draft.
 
@@ -33,7 +35,7 @@ The requested sounds are retained at the publisher's direction. Their rights rem
 
 The original `SOUND-CREDITS.txt`, lines 91–95, explicitly said that the quote recordings had no verified open redistribution license. Those recordings were bundled in `audio.js` and included again in the source ZIP and preview audio. Publishing those files would distribute the recordings, not just the extension code.
 
-The earlier 1.5.1 public copy contained only 15 effects whose source pages identified them as CC0. This statement does not apply to the current 1.5.15 build, which replaces nine of those recordings and still needs rights clearance. The current candidate includes the requested I'll be back movie quote and Luigi Yahoo! game voice clip. The old quote scripts and separate Quotes tab remain excluded. Custom uploads remain available. Source links are in [the audio credits](../extension/SOUND-CREDITS.txt).
+The earlier 1.5.1 public copy contained only 15 effects whose source pages identified them as CC0. This statement does not apply to the current 1.5.15 build, which replaces nine of those recordings and still needs rights clearance. The current candidate includes the requested I'll be back movie quote and Luigi Yahoo! game voice clip. The old quote scripts and separate Quotes tab remain excluded. Custom uploads remain available. Source links are in [the audio credits](../../extension/SOUND-CREDITS.txt).
 
 That resolved the asset problem in 1.5.1. Audio rights are open again for the nine requested replacements in 1.5.14. Source-page labels are not a guarantee about every contributor's ownership. [Chrome's intellectual property policy](https://developer.chrome.com/docs/webstore/program-policies/policies#impersonation--intellectual-property) applies to bundled media as well as code.
 
@@ -43,13 +45,13 @@ The original `panel.js`, lines 252–270, posted a chosen clip to the MAIN-world
 
 The public copy validates imports using an isolated `OfflineAudioContext`. The engine's unused validation command was removed. A regression check observes the page message channel during import and confirms that no audio bytes enter it. The panel now explains the transfer that happens when the user previews or plays a clip.
 
-The public copy also includes a [privacy policy](PRIVACY.md) and a link from the extension popup. Its hosted URL still needs to be added to the store dashboard. [Chrome's privacy requirements](https://developer.chrome.com/docs/webstore/program-policies/policies#privacy-policy) require an accurate policy for extensions that handle user data.
+The public copy also includes a [privacy policy](../PRIVACY.md) and a link from the extension popup. Its hosted URL still needs to be added to the store dashboard. [Chrome's privacy requirements](https://developer.chrome.com/docs/webstore/program-policies/policies#privacy-policy) require an accurate policy for extensions that handle user data.
 
 ### P2: The installation ZIP could not be used as the store upload
 
 The original packaging script put `manifest.json` under a `meet-soundboard/` folder. Chrome's store upload requires it at the ZIP root. The source ZIP also included files that should never enter the store package.
 
-The new [packaging script](../scripts/package.py) uses an explicit runtime file list, places the manifest at the root, checks syntax and permissions, and writes a checksum. Browser profiles, test reports, original recordings, and build tools cannot enter that ZIP. The ZIP has deterministic entry dates. [Chrome's package instructions](https://developer.chrome.com/docs/webstore/prepare#zip-your-extension-files) describe the root requirement.
+The new [packaging script](../../scripts/package.py) uses an explicit runtime file list, places the manifest at the root, checks syntax and permissions, and writes a checksum. Browser profiles, test reports, original recordings, and build tools cannot enter that ZIP. The ZIP has deterministic entry dates. [Chrome's package instructions](https://developer.chrome.com/docs/webstore/prepare#zip-your-extension-files) describe the root requirement.
 
 ### P2: The minimum Chrome version did not support the advertised library size
 
@@ -69,9 +71,9 @@ These were three review passes on the same code, not three independent external 
 
 ## Remaining limits and release gates
 
-- The audio engine shares the Meet page's MAIN world. Same-window message checks do not authenticate scripts in that page. A compromised Meet page or another extension with page access can interfere with the mixer. This is documented in [SECURITY.md](../SECURITY.md). Adding a random message token would not isolate the audio engine from its host page. [Chrome documents this execution-world boundary](https://developer.chrome.com/docs/extensions/reference/manifest/content-scripts#world).
+- The audio engine shares the Meet page's MAIN world. Same-window message checks do not authenticate scripts in that page. A compromised Meet page or another extension with page access can interfere with the mixer. This is documented in [SECURITY.md](../../SECURITY.md). Adding a random message token would not isolate the audio engine from its host page. [Chrome documents this execution-world boundary](https://developer.chrome.com/docs/extensions/reference/manifest/content-scripts#world).
 - All 74 automated checks passed on Chromium 158 for the 1.5.15 build. These use local Meet-origin fixtures, not Google's live application. On November 12, 2026, the tester confirmed that voice and effects from the public 1.5.2 package arrived together on a second device in Meet. The tester also reported that the basic two-device test worked after loading the exact 1.5.15 package. The other live checks, including voice excluded, Meet mute, microphone changes, and recovery after interruption, remain unconfirmed.
-- Chrome 114 is the API floor. The 1.5.1 checks passed locally on macOS and in the [Linux GitHub workflow](https://github.com/nschechter/meet-soundboard/actions/runs/43286338766). Other supported browser versions and operating systems have not been checked.
+- Chrome 114 is the API floor. The 1.5.1 checks passed locally on macOS and in the [Linux GitHub workflow](https://github.com/nschechter/meeting-soundboard/actions/runs/43286338766). Other supported browser versions and operating systems have not been checked.
 - The public privacy and support URLs are live. The Ponerian publisher account is verified, and version 1.5.15 is saved as an unpublished store draft. The listing, artwork, privacy disclosures, and reviewer notes are saved. The privacy policy and testing notes in this release describe 1.5.15. The unconfirmed live checks are listed above. The draft has not been submitted.
 - Compressed audio can consume more memory after decoding than its file size suggests. Both validation and playback enforce duration after decoding. The byte limit reduces exposure but is not a fixed decoded-memory limit.
 

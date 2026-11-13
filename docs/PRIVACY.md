@@ -24,4 +24,4 @@ The extension has no analytics, advertising, remote code downloads, or developer
 
 Data is used only to provide the soundboard. It is not sold or used for advertising. Its use follows the Chrome Web Store User Data Policy, including the Limited Use requirements.
 
-Questions can be raised through the [repository issue tracker](https://github.com/nschechter/meet-soundboard/issues). Do not attach private recordings or personal data to public issues.
+Questions can be raised through the [repository issue tracker](https://github.com/nschechter/meeting-soundboard/issues). Do not attach private recordings or personal data to public issues.
