@@ -1,77 +1,81 @@
-# Meeting Soundboard Beta
+# Meeting Soundboard
 
-This branch tests Teams and Zoom browser support alongside Google Meet. Version 1.6.1 is experimental. A live Teams personal call passed effects-only playback, mute, and unmute recovery using a separate browser session. Voice and effects together and Teams work accounts still need live testing. Zoom is untested on the live service. Desktop apps are not supported. See [browser testing](docs/BROWSER-TESTING.md).
+Meeting Soundboard adds sound effects to your browser meetings. Play a reaction or your own clip without sharing your screen or installing an audio driver.
 
-The Meet-only 1.5.15 package was submitted by the publisher. Existing store assets and release-review notes describe that package, not this beta.
+- 15 built-in sounds, including air horn, applause, quack, crickets, and dramatic boom.
+- Drag-and-drop imports with trimming, volume adjustment, and a preview of your selection.
+- Controls for mixing in your voice and hearing effects on your own device.
+- Light and dark mode, keyboard shortcuts, and a shared sound library across meeting sites.
 
-A Chrome extension that adds a soundboard to browser meetings. Play classic reactions or your own clips through your meeting audio, without sharing your screen.
+## Where it works
 
-This is an unreleased candidate. The requested Applause, Quack, Dramatic boom, Tomato splat, Crickets, Laugh track, I'll be back, Punch, and Luigi Yahoo! are included as built-in defaults. The publisher has chosen to retain them with redistribution rights still unverified. This beta has not been submitted to the Chrome Web Store. It is an independent project and is not made or endorsed by Google, Microsoft, or Zoom.
+| Meeting app | Status |
+| --- | --- |
+| Google Meet | Supported in Chrome. |
+| Microsoft Teams in Chrome | Beta with limited live testing. |
+| Zoom in Chrome | Experimental. Not yet tested in a live call. |
 
-## Install
+Requires desktop Chrome. Native meeting apps, mobile apps, and embedded calls are not supported. See the [browser testing notes](docs/BROWSER-TESTING.md) for details.
 
-1. Download or clone this repository.
-2. Open `chrome://extensions` in Chrome and turn on Developer mode.
-3. Click **Load unpacked** and select the `extension` folder.
-4. Open or reload Google Meet, Teams, or Zoom in Chrome after your current call ends.
+## Install the beta
 
-The extension folder is ready to load. No build step or extra audio driver is needed. The declared minimum is Chrome 114. Automated checks currently run on Chromium 158, so that minimum is an API requirement, not a promise that every older release has been tested.
+1. Download and unzip the [`experimental/browser-meetings` branch](https://github.com/nschechter/meet-soundboard/tree/experimental/browser-meetings) using **Code → Download ZIP**, or clone that branch.
+2. Open `chrome://extensions` in Chrome. Disable any older Meet Soundboard installation so only one soundboard runs.
+3. Enable **Developer mode**, click **Load unpacked**, and select the downloaded repository's `extension` folder.
+4. After any active call ends, reload the meeting tab and join using browser audio.
 
-## Use
+No build step is needed. A separate installation has its own saved sounds and settings.
 
-The small waveform button sits beside Meet’s bottom controls. Hover over it to see **Soundboard**. In narrow windows, it moves above the controls so it does not cover them.
+## Play a sound
 
-Join a call, leave your Meet microphone on, open **Soundboard**, and click **Turn on**. Click a sound card to play it to the call. Turn off Meet's noise cancellation or Studio sound if it filters out effects. If Meet merges nearby computers, turn off Adaptive audio in Meet's audio settings. The extension does not change those settings for you.
+Keep the meeting microphone **unmuted**, open the waveform button near the meeting controls, and click **Turn on**. Click a card to play to the call, or **▷** to preview only on your device.
 
-- The small **▷** button previews a sound on your device.
-- **Include my voice** controls whether your voice joins the effects. It only applies while the soundboard is on.
-- **Hear effects too** plays outgoing effects on your device as well. It is on by default. If an older version saved it as off, check it once to turn local playback on. Your choice is saved.
-- **Stop all** stops the effect. **Turn off** restores your normal microphone, including your voice.
-- Keys **1–9** play the first nine effects while the panel has focus. **Escape** stops playback.
+- **Include my voice** mixes your microphone with effects. Uncheck it to send only effects while keeping the meeting mic unmuted.
+- **Hear effects too** lets you hear the effects you send. It starts on and remembers your choice.
+- **Stop all** stops the current sound. **Turn off** restores your normal microphone, including your voice.
+- Press **1–9** to play the first nine effects while the panel has focus. **Escape** stops playback.
 
-Meet mute silences both voice and effects. Use headphones for previews and local playback so your microphone does not pick them up.
+Use headphones to keep local playback out of your microphone. A connected status confirms the audio connection. Check with another participant to confirm they hear it.
 
-**My sounds** accepts a file from the picker or a drop anywhere on the open board. Import up to 2 minutes and 10 MB, then save up to 30 seconds. Drag the waveform handles to select the part to keep and adjust its volume up to 300%. **Play selection**, directly below the waveform, previews that part with your volume changes. Only you hear it. **Reset** restores the full selection and original volume. Use **Edit** on a saved sound to change it later. Saving keeps only the selected audio, so keep the source file if you might need it again.
+## Add your own sounds
 
-The library holds up to 12 clips and 8 MB of saved data. Edited clips use mono WAV audio and stay within the 2 MB playback limit. Clips and settings stay in Chrome's local extension storage. Imports and editor previews do not pass audio bytes into the meeting page. Previewing a saved card or playing it does. Playing to the meeting sends it to participants through the meeting service.
+Drop a file onto the board or choose **My sounds → Add a sound**. Drag the waveform handles to trim it, adjust volume up to **300%**, and use **Play selection** before saving.
 
-The included effects are Air horn, Applause, Ba dum tss, Correct!, BOOOOO!, Luigi Yahoo!, Tomato splat, I'll be back, Punch, Laugh track, Cha-ching!, Quack, Crickets, Sad trombone, and Dramatic boom.
+Import up to **2 minutes / 10 MB** and save up to **30 seconds**. The library holds **12 clips / 8 MB**. Saved clips can be edited, but only the trimmed audio is kept. Keep your source file for later.
 
-This candidate includes the requested I'll be back movie quote and Luigi Yahoo! game voice clip. Their redistribution rights remain unresolved. Add your own clips only when you have permission to use them.
+## If audio is missing
 
-## Privacy and limits
+- If others hear effects but you do not, enable **Hear effects too**. The **▷** button previews locally even when that setting is off.
+- If the board stays paused after unmuting, try turning it off, muting and unmuting in the meeting app, then turning it back on.
+- If effects get cut off, check noise suppression. In Meet, Studio sound or Adaptive audio can also affect playback. The extension never changes those settings automatically.
+- If Teams shows **Cannot read microphone state**, outgoing audio is paused. Previews still work. Turn the board off to restore your normal microphone.
 
-The extension runs on the meeting hosts listed in the manifest. It uses existing outgoing browser audio tracks. Teams and Zoom compatibility is still being tested. It does not record calls, send analytics, or send audio to the developer. Read the [privacy policy](docs/PRIVACY.md) and [security notes](SECURITY.md).
+## Privacy
 
-The mixer runs in the meeting page because it needs access to outgoing audio. It shares that page's trust boundary. A connected status confirms the browser audio route, not whether another participant can hear it. Changes to meeting apps can affect compatibility.
+The extension does not record calls, collect analytics, or use a developer server. Clips and settings stay in Chrome's local extension storage.
 
-If audio behaves unexpectedly, turn the soundboard off. Reloading the extension also requires reloading Meet after the call. Gmail's embedded Meet, mobile apps, and Safari are not supported.
+Imports and editor previews stay inside the extension. Previewing or playing a saved card passes its audio to the meeting page. Playing to the call sends it to participants through the meeting service.
 
-## Development
+Read the [privacy policy](docs/PRIVACY.md) and [security notes](SECURITY.md) for details.
 
-Studio sound automation is an unfinished experiment on the [`experimental/studio-sound`](https://github.com/nschechter/meet-soundboard/tree/experimental/studio-sound) branch. It is excluded from `main` and the store candidate.
+## Local development
 
-Use Node.js 22.12 or newer:
+Requires Node.js 22.12+ and Python 3.
 
 ```sh
 npm ci --ignore-scripts
 npx playwright install chromium
 npm test
-npm run package:candidate
 ```
 
-Tests use local fixtures and two real WebRTC peers in a separate test browser. They do not open a live Google meeting or use your microphone. Reports, screenshots, and browser profiles go in the ignored `test-results` directory. On Linux, Playwright may also need its system dependencies installed.
+Edit files in `extension/`, reload the extension at `chrome://extensions`, then refresh your meeting tab after the call ends. No build step is needed.
 
-The store ZIP is written to `dist` with `manifest.json` at the root. Packaging validates the file list and JavaScript syntax. It does not replace running the tests.
+Run `npm run package:candidate` to create a ZIP in `dist/`. On Linux, add `--with-deps` when installing Chromium.
 
-To rebuild the audio, install Python 3 and FFmpeg with `libmp3lame`, then run `npm run build:audio`. Source files, source links, processing settings, and current rights information are included. Encoding can differ between FFmpeg versions. No download is needed to build or run the extension.
+## License and sound credits
 
-See [testing](docs/TESTING.md) and the [release review](docs/RELEASE-REVIEW.md) before publishing.
+Code and documentation use [MIT](LICENSE). Audio has separate terms. Six effects use CC0. Nine recordings are included at the publisher's direction with redistribution rights still unverified. See [SOUND-CREDITS.txt](extension/SOUND-CREDITS.txt).
 
-`npm run package:candidate` creates a local review ZIP. CI uses this command to check packaging without making a publication decision. The publisher has chosen to keep the requested recordings. `npm run package -- --allow-unverified-audio` creates the release ZIP with those recordings and their existing rights disclosures. That option does not grant rights or change the recorded licenses.
+Only add or distribute clips you have permission to use.
 
-## Source and audio rights
-
-The project's code and documentation use the [MIT License](LICENSE). Copyright (c) 2026 Noah Schechter. You can use, modify, and redistribute the code, including commercially, provided you keep the copyright and license notice. Modified versions do not have to publish their source code.
-
-Six built-in effects use CC0. The nine replacements have separate or unverified rights, listed in [SOUND-CREDITS.txt](extension/SOUND-CREDITS.txt). Third-party development packages retain their own licenses. The MIT license does not grant rights to movie, TV, or other recordings you may import.
+This is an independent project and is not made or endorsed by Google, Microsoft, or Zoom.
