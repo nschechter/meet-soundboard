@@ -4,7 +4,10 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 const root = path.resolve(import.meta.dirname, '..');
-const scripts = await Promise.all(['sounds.js', 'audio.js', 'engine.js'].map(name => fs.readFile(path.join(root, 'extension', name), 'utf8')));
+const extension = path.resolve(process.argv[2] || path.join(root, 'extension'));
+const output = path.resolve(process.argv[3] || path.join(root, 'test-results'));
+await fs.mkdir(output, { recursive: true });
+const scripts = await Promise.all(['sounds.js', 'audio.js', 'engine.js'].map(name => fs.readFile(path.join(extension, name), 'utf8')));
 const browser = await chromium.launch({ headless: true });
 const results = [];
 const errors = [];
@@ -118,7 +121,8 @@ try {
     await page.evaluate(() => { pack.releases[1](); pack.releases[0](); });
     await page.waitForFunction(() => pack.starts.length === 1);
     await page.waitForTimeout(100);
-    assert.ok(Math.abs((await page.evaluate(() => pack.starts[0])) - .383) < .002);
+    const expectedDuration = await page.evaluate(() => MeetSoundboardSounds.sounds.find(sound => sound.id === 'quack').duration);
+    assert.ok(Math.abs((await page.evaluate(() => pack.starts[0])) - expectedDuration) < .002);
     assert.equal(await page.evaluate(() => pack.starts.length), 1);
   });
 
@@ -140,6 +144,6 @@ try {
     assert.deepEqual(await page.evaluate(() => pack.starts), []);
   });
   assert.deepEqual(errors, []);
-  await fs.writeFile(path.join(root, 'test-results/audio-assets-results.json'), JSON.stringify({ checks: results, browser: browser.version(), errors }, null, 2));
+  await fs.writeFile(path.join(output, 'audio-assets-results.json'), JSON.stringify({ checks: results, browser: browser.version(), errors }, null, 2));
   console.log(`\n${results.length} sound pack checks passed. No browser errors.`);
 } finally { await browser.close(); }

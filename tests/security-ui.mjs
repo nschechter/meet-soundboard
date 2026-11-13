@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { importFile } from './import-file.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const extension = path.join(root, 'extension');
@@ -38,7 +39,9 @@ async function open(page, url) {
 }
 
 async function upload(page, name, seconds = 1) {
-  await page.locator('input.file').setInputFiles({ name: `${name}.wav`, mimeType: 'audio/wav', buffer: wave(seconds) });
+  await importFile(page, { name: `${name}.wav`, buffer: wave(seconds) });
+  await page.locator('.editor-save:enabled').click();
+  await page.locator('.clip-editor').waitFor({ state: 'hidden' });
 }
 
 async function count(page, expected) {
@@ -130,10 +133,11 @@ try {
     assert.equal(await first.locator('.now-playing').textContent(), 'Ready for your next cue');
   });
 
-  await check('Long audio is rejected even when its encoded file is small', async () => {
-    await upload(first, 'Too long', 31);
-    await first.getByText('Choose a clip that is 30 seconds or shorter.', { exact: true }).waitFor();
+  await check('Audio longer than the editor limit is rejected even when its file is small', async () => {
+    await importFile(first, { name: 'Too long.wav', buffer: wave(121) });
+    await first.getByText('Choose audio up to 2 minutes long, then trim it to 30 seconds.', { exact: true }).waitFor();
     assert.equal(await first.locator('.custom-grid .sound').count(), 2);
+    await first.locator('.editor-cancel').click();
   });
 
   await check('Audio filenames stay literal text and cannot inject markup', async () => {
@@ -150,9 +154,24 @@ try {
     await first.locator('button.launcher').click();
     await first.getByRole('tab', { name: 'My sounds' }).click();
     assert.equal(await first.locator('output').textContent(), '65%');
-    assert.equal(await first.getByLabel('Hear effects too', { exact: true }).isChecked(), false);
+    assert.equal(await first.getByLabel('Hear effects too', { exact: true }).isChecked(), true);
     assert.equal(await first.getByLabel('Include my voice', { exact: true }).isChecked(), true);
     assert.equal(await first.locator('.custom-grid .sound').count(), 0);
+  });
+
+  await check('Local playback remembers explicit off and on choices after reload', async () => {
+    for (const hearEffects of [false, true]) {
+      await first.getByLabel('Hear effects too', { exact: true }).setChecked(hearEffects);
+      for (let attempt = 0; attempt < 50; attempt++) {
+        if ((await popup.evaluate(() => chrome.storage.local.get('prefs'))).prefs.hearEffects === hearEffects) break;
+        await first.waitForTimeout(50);
+      }
+      assert.equal((await popup.evaluate(() => chrome.storage.local.get('prefs'))).prefs.hearEffects, hearEffects);
+      await first.reload();
+      await first.locator('button.launcher').click();
+      await first.waitForFunction(expected => document.querySelector('#meet-soundboard-root').shadowRoot.querySelector('#hear-effects').checked === expected, hearEffects);
+    }
+    await first.getByRole('tab', { name: 'My sounds' }).click();
   });
 
   await check('The empty library and toolbar popup pass accessibility checks', async () => {

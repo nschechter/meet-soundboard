@@ -1,0 +1,27 @@
+{
+  "name": "Meet Soundboard",
+  "version": "1.5.15",
+  "shortDescription": "A soundboard inside Google Meet. Play classic reaction sounds or your own clips into your meeting audio.",
+  "description": "Play sound effects into your Google Meet calls with a soundboard beside the meeting controls. No screen sharing or extra audio driver is needed.\n\nChoose from 15 built-in sounds: Air horn, Applause, Ba dum tss, Correct!, BOOOOO!, Luigi Yahoo!, Tomato splat, I'll be back, Punch, Laugh track, Cha-ching!, Quack, Crickets, Sad trombone, and Dramatic boom.\n\n- Click a sound card to play it to the meeting.\n- Preview a clip before playing it to everyone.\n- Include your voice or switch to effects only.\n- Adjust effect volume and stop playback with one button.\n- Hear effects on your own device too, or turn local playback off.\n- Drag an audio file onto the board or choose one from your computer.\n- Import up to 2 minutes and 10 MB. Trim to 30 seconds, adjust volume up to 300%, and preview the selection before saving.\n- Keep up to 12 custom clips, with an 8 MB total library limit. Saved clips stay under 2 MB each.\n- Use keys 1 through 9 while the soundboard has focus. Escape stops playback.\n\nKeep your Meet microphone on to send effects. Muting in Meet silences both your voice and the effects from this computer. If Meet filters out effects, turn off noise cancellation or Studio sound in Meet's audio settings. If Meet merges nearby computers, turn off Adaptive audio. The extension does not change those settings for you. Use headphones for previews and local playback.\n\nIf Meet pauses outgoing audio, the board shows that playback is local only. A preview already playing stays local when the connection resumes. Tap a sound again to send it to the call.\n\nCustom clips and preferences stay in Chrome's local extension storage. Imports and editor previews stay inside the extension. Previewing a saved card or playing it passes that clip's audio into the Meet page. Playing to the meeting sends it to participants through Meet. The extension does not record calls, run analytics, or send your audio to the developer.\n\nWorks on the Google Meet website in desktop Chrome. Gmail's embedded Meet and mobile apps are not supported. Changes to Meet may affect compatibility. Only add clips you have permission to use.\n\nMeet Soundboard is an independent project. It is not made or endorsed by Google.",
+  "language": "English",
+  "category": "Communication",
+  "price": "Free",
+  "visibility": "Public",
+  "requestedPublicationTiming": "Deferred publication",
+  "publicationTimingSet": false,
+  "homepageUrl": "https://github.com/nschechter/meet-soundboard",
+  "supportUrl": "https://github.com/nschechter/meet-soundboard/issues",
+  "privacyPolicyUrl": "https://github.com/nschechter/meet-soundboard/blob/main/docs/PRIVACY.md",
+  "singlePurpose": "Let users play built-in or locally saved sound effects into their own outgoing Google Meet audio, with controls for preview, volume, voice inclusion, and stopping playback.",
+  "storagePermissionJustification": "Save imported audio clips and playback preferences in Chrome's local extension storage. The library is limited to 12 clips and 8 MB. Chrome sync storage is not used.",
+  "meetSiteAccessJustification": "Run only on https://meet.google.com/* to show the soundboard and mix effects with Meet's existing outgoing microphone track. The mixer runs in the page's MAIN world to access WebRTC audio senders. The panel and saved-clip validation run in Chrome's isolated extension world. No chat messages or participant lists are collected.",
+  "remoteCode": false,
+  "remoteCodeExplanation": "All executable code and built-in sounds are bundled. Custom uploads are decoded as audio, not executed. There are no remote scripts or developer servers.",
+  "dataCategoriesToDisclose": [
+    "Personal communications",
+    "Website content"
+  ],
+  "reviewerInstructions": "No extension login. Use desktop Chrome, your Meet account, headphones, and a muted second device in an empty call. Turn off Adaptive audio and noise cancellation/Studio sound. Reload Meet, join with mic on, open the waveform button, then Turn on. Test voice + effects, effects only while changing mics, Meet mute, local preview, Stop all, off/on, and drag/drop with trim preview. Audio terms: SOUND-CREDITS.txt. Full checks: https://github.com/nschechter/meet-soundboard/blob/main/docs/TESTING.md",
+  "traderStatus": "Trader",
+  "publisher": "Ponerian"
+}

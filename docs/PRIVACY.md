@@ -1,6 +1,6 @@
 # Privacy policy
 
-Updated November 12, 2026. Applies to the public Meet Soundboard release candidate, version 1.5.2.
+Updated November 12, 2026. Applies to the public Meet Soundboard release candidate, version 1.5.15.
 
 Meet Soundboard adds sound effects to your outgoing Google Meet audio. The developer does not run a server for the extension and does not receive your audio, clips, or settings.
 
@@ -14,7 +14,7 @@ Meet's microphone permission still applies. The extension does not request separ
 
 Clips you choose to add are checked in the extension and saved in Chrome's local extension storage with their names and durations. Volume, voice, and local playback preferences are saved there too. The extension does not use Chrome sync storage.
 
-The panel displays clip names within the Meet page. When you preview or play a clip, its audio bytes pass into the Meet page's audio mixer. Preview audio is played only on your device by the extension. Playing to the meeting sends the clip to participants. The Meet page can access those bytes once they enter its context. A preview can also be picked up by your physical microphone if you use speakers.
+Imports and edits are processed on your device. Editor previews play locally without passing their audio bytes to the Meet page mixer. Saving an edit replaces the saved clip with the selected audio and volume changes. The original file is not stored by the extension. The panel displays clip names within the Meet page. When you preview a saved sound card or play it to the meeting, its audio bytes pass into the Meet page's audio mixer. Preview audio is played only on your device by the extension. Playing to the meeting sends the clip to participants. The Meet page can access those bytes once they enter its context. A preview can also be picked up by your physical microphone if you use speakers.
 
 Use each clip's delete button to remove it from the saved library. Uninstalling the extension removes its local saved data. Audio already sent to participants cannot be recalled by deleting the local clip.
 

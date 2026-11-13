@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import AxeBuilder from '@axe-core/playwright';
+import { importFile } from './import-file.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const extension = path.join(root, 'extension');
@@ -23,9 +24,19 @@ const page = await context.newPage();
 await page.addInitScript(() => {
   window.reviewContexts = [];
   const NativeAudioContext = AudioContext;
+  const connect = AudioNode.prototype.connect;
+  AudioNode.prototype.connect = function(destination, ...args) {
+    if (destination === this.context.destination && this.context.localAnalyser) connect.call(this, this.context.localAnalyser);
+    return connect.call(this, destination, ...args);
+  };
   window.AudioContext = new Proxy(NativeAudioContext, {
     construct(Target, args) {
       const context = new Target(...args);
+      context.localAnalyser = context.createAnalyser();
+      const silent = context.createGain();
+      silent.gain.value = 0;
+      connect.call(context.localAnalyser, silent);
+      connect.call(silent, context.destination);
       window.reviewContexts.push(context);
       return context;
     }
@@ -75,6 +86,8 @@ try {
     assert.equal(await page.evaluate(() => window.__meetSoundboardInstalled), true);
     await page.locator('button.launcher').click();
     assert.equal(await page.locator('.builtin-grid .sound').count(), 15);
+    assert.ok((await page.locator('.builtin-grid .sound-meta').allTextContents()).every(text => /^\d+\.\d+s$/.test(text)));
+    assert.equal(await page.getByLabel('Hear effects too', { exact: true }).isChecked(), true);
     await waitState('off');
   });
 
@@ -135,10 +148,86 @@ try {
   });
 
   await check('Activation connects mixed audio to a real WebRTC receiver', async () => {
+    await page.getByRole('button', { name: 'Play Correct! to meeting', exact: true }).click();
+    await page.getByText('Click Turn on first, or use ▷ to preview a sound.', { exact: true }).waitFor();
     await page.getByRole('button', { name: 'Turn on', exact: true }).click();
     await waitState('ready');
+    assert.equal(await page.locator('.notice').isVisible(), false);
     assert.equal(await page.evaluate(() => window.test.sender.track !== window.test.track), true);
     await expectAudio(value => value > .05, 'Microphone audio reaches receiver after activation');
+  });
+
+  await check('Effects play locally by default without monitoring the microphone', async () => {
+    await page.evaluate(() => test.localAnalyser = reviewContexts.find(context => context !== test.audio).localAnalyser);
+    await expectAudio(value => value < .005, 'The microphone is not played back locally', 'localAnalyser');
+    await page.getByRole('button', { name: 'Play Sad trombone to meeting', exact: true }).click();
+    await expectAudio(value => value > .01, 'The effect reaches local output', 'localAnalyser');
+    await page.getByLabel('Include my voice', { exact: true }).uncheck();
+    await expectAudio(value => value > .01, 'The effect also reaches the meeting');
+    await page.getByLabel('Hear effects too', { exact: true }).uncheck();
+    await expectAudio(value => value < .005, 'Unchecking local playback silences the local effect', 'localAnalyser');
+    await expectAudio(value => value > .01, 'Unchecking local playback keeps the meeting effect audible');
+    await page.getByLabel('Hear effects too', { exact: true }).check();
+    await expectAudio(value => value > .01, 'Checking local playback restores the local effect', 'localAnalyser');
+    await page.getByRole('button', { name: '■ Stop all', exact: true }).click();
+    await expectAudio(value => value < .005, 'Stop all silences the local effect', 'localAnalyser');
+    await expectAudio(value => value < .005, 'Stop all silences the meeting effect');
+    await page.getByLabel('Include my voice', { exact: true }).check();
+  });
+
+  await check('Paused meeting audio plays locally and resumes sending on the next tap without reconnecting', async () => {
+    await page.getByLabel('Include my voice', { exact: true }).uncheck();
+    await page.evaluate(async () => {
+      const parameters = test.sender.getParameters();
+      parameters.encodings[0].active = false;
+      await test.sender.setParameters(parameters);
+    });
+    await waitState('paused');
+    await page.getByRole('button', { name: 'Play Sad trombone only for me', exact: true }).click();
+    await expectAudio(value => value > .01, 'Paused audio still plays on the local output', 'localAnalyser');
+    await expectAudio(value => value < .005, 'Local playback never reaches the paused receiver');
+    assert.equal(await page.evaluate(() => test.sender.getParameters().encodings[0].active), false);
+    assert.equal(await page.locator('.now-playing').textContent(), 'Preview: Sad trombone');
+    await page.locator('.panel').screenshot({ path: path.join(root, 'test-results/paused-audio-preview.png') });
+    await page.evaluate(async () => {
+      const parameters = test.sender.getParameters();
+      parameters.encodings[0].active = true;
+      await test.sender.setParameters(parameters);
+    });
+    await waitState('ready');
+    await expectAudio(value => value > .01, 'The preview continues locally when Meet starts sending', 'localAnalyser');
+    await expectAudio(value => value < .005, 'An existing preview stays private after Meet resumes');
+    assert.equal(await page.locator('.notice').isVisible(), false);
+    await page.getByRole('button', { name: 'Play Sad trombone to meeting', exact: true }).click();
+    await expectAudio(value => value > .01, 'The next tap reaches the receiver without reconnecting');
+    await page.getByRole('button', { name: '■ Stop all', exact: true }).click();
+  });
+
+  await check('Paused local playback respects Hear effects too and explicit previews remain available', async () => {
+    await page.evaluate(async () => {
+      const parameters = test.sender.getParameters();
+      parameters.encodings[0].active = false;
+      await test.sender.setParameters(parameters);
+    });
+    await waitState('paused');
+    await page.getByRole('button', { name: 'Play Sad trombone only for me', exact: true }).click();
+    await expectAudio(value => value > .01, 'The paused sound starts locally', 'localAnalyser');
+    await page.getByLabel('Hear effects too', { exact: true }).uncheck();
+    await expectAudio(value => value < .005, 'Disabling local playback stops the paused sound', 'localAnalyser');
+    await page.getByRole('button', { name: 'Play Sad trombone to meeting', exact: true }).click();
+    await expectAudio(value => value < .005, 'Local playback stays off when disabled', 'localAnalyser');
+    assert.equal(await page.locator('.sound.previewing').count(), 0);
+    await page.getByRole('button', { name: 'Preview Sad trombone only for me', exact: true }).click();
+    await expectAudio(value => value > .01, 'The explicit preview still plays locally', 'localAnalyser');
+    await expectAudio(value => value < .005, 'The explicit preview stays out of the receiver');
+    await page.getByRole('button', { name: '■ Stop all', exact: true }).click();
+    await page.getByLabel('Hear effects too', { exact: true }).check();
+    await page.evaluate(async () => {
+      const parameters = test.sender.getParameters();
+      parameters.encodings[0].active = true;
+      await test.sender.setParameters(parameters);
+    });
+    await waitState('ready');
   });
 
   await check('Effects-only mode removes voice but transmits the sound effect', async () => {
@@ -306,7 +395,13 @@ try {
     wave.write('data', 36); wave.writeUInt32LE(32000, 40);
     for (let i = 0; i < 16000; i++) wave.writeInt16LE(Math.round(Math.sin(i / 16000 * Math.PI * 2 * 880) * 10000), 44 + i * 2);
     await page.getByRole('tab', { name: 'My sounds' }).click();
-    await page.locator('input.file').setInputFiles({ name: '<test clip>.wav', mimeType: 'audio/wav', buffer: wave });
+    await page.getByLabel('Include my voice', { exact: true }).uncheck();
+    await expectAudio(value => value < .005, 'Outgoing audio is silent before the editor preview');
+    await importFile(page, { name: '<test clip>.wav', buffer: wave });
+    await page.locator('.editor-preview').click();
+    await expectAudio(value => value < .005, 'Editor preview does not reach the remote receiver');
+    await page.getByRole('button', { name: '■ Stop preview', exact: true }).click();
+    await page.locator('.editor-save:enabled').click();
     await page.getByRole('button', { name: 'Play <test clip> to meeting', exact: true }).waitFor();
     await page.getByLabel('Include my voice', { exact: true }).check();
     await page.getByRole('button', { name: 'Play <test clip> to meeting', exact: true }).click();
@@ -340,19 +435,24 @@ try {
 
   await check('Invalid and oversized audio files are rejected', async () => {
     await page.getByRole('tab', { name: 'My sounds' }).click();
-    await page.locator('input.file').setInputFiles({ name: 'invalid.wav', mimeType: 'audio/wav', buffer: Buffer.from('not audio') });
-    await page.waitForFunction(() => !document.querySelector('#meet-soundboard-root').shadowRoot.querySelector('.upload').disabled);
+    await importFile(page, { name: 'invalid.wav', buffer: Buffer.from('not audio') });
+    await page.getByText('Chrome could not read this audio. Try an MP3 or WAV file.', { exact: true }).waitFor();
     assert.equal(await page.locator('.custom-grid .sound').count(), 0);
-    await page.locator('input.file').setInputFiles({ name: 'large.wav', mimeType: 'audio/wav', buffer: Buffer.alloc(2 * 1024 * 1024 + 1) });
-    await page.getByText('Choose an audio file smaller than 2 MB.', { exact: true }).waitFor();
+    await page.locator('.editor-cancel').click();
+    await importFile(page, { name: 'large.wav', buffer: Buffer.alloc(10 * 1024 * 1024 + 1) });
+    await page.getByText('Choose an audio file smaller than 10 MB.', { exact: true }).waitFor();
     assert.equal(await page.locator('.custom-grid .sound').count(), 0);
+    await page.locator('.editor-cancel').click();
     await page.getByRole('tab', { name: 'Sound effects' }).click();
   });
 
   await check('All fifteen built-in effects reach the remote receiver', async () => {
     await page.getByLabel('Include my voice', { exact: true }).uncheck();
     await expectAudio(value => value < .001, 'Voice is excluded before checking bundled samples');
-    for (const name of ['Air horn', 'Applause', 'Ba dum tss', 'Correct!', 'BOOOOO!', 'Egg attack', 'Tomato splat', 'Record scratch', 'Wrong answer', 'Laugh track', 'Cha-ching!', 'Quack', 'Crickets', 'Sad trombone', 'Dramatic boom']) {
+    assert.equal(await page.getByRole('button', { name: 'Play Record scratch to meeting', exact: true }).count(), 0);
+    assert.equal(await page.getByRole('button', { name: 'Play Wrong answer to meeting', exact: true }).count(), 0);
+    assert.equal(await page.getByRole('button', { name: 'Play Egg attack to meeting', exact: true }).count(), 0);
+    for (const name of ['Air horn', 'Applause', 'Ba dum tss', 'Correct!', 'BOOOOO!', 'Luigi Yahoo!', 'Tomato splat', "I'll be back", 'Punch', 'Laugh track', 'Cha-ching!', 'Quack', 'Crickets', 'Sad trombone', 'Dramatic boom']) {
       await page.getByRole('button', { name: `Play ${name} to meeting`, exact: true }).click();
       await expectAudio(value => value > .001, `${name} reaches the receiver`);
       await page.getByRole('button', { name: '■ Stop all', exact: true }).click();
@@ -361,7 +461,7 @@ try {
     await page.getByLabel('Include my voice', { exact: true }).check();
   });
 
-  await check('Expanded sound pack keeps shortcuts accurate and key 9 reaches the receiver', async () => {
+  await check('Sound pack keeps shortcuts accurate and keys 6, 8, and 9 reach the receiver', async () => {
     const cards = page.locator('.builtin-grid .trigger');
     assert.deepEqual(await cards.evaluateAll(buttons => buttons.slice(0, 4).map(button => button.getAttribute('aria-label'))), ['Air horn', 'Applause', 'Ba dum tss', 'Correct!'].map(name => `Play ${name} to meeting`));
     for (let i = 0; i < 15; i++) {
@@ -369,12 +469,14 @@ try {
     }
     assert.equal(await page.locator('#effects-tab .count').textContent(), '15');
     await page.getByLabel('Include my voice', { exact: true }).uncheck();
-    await expectAudio(value => value < .001, 'Voice is excluded before checking key 9');
-    await cards.first().press('9');
-    await page.getByText('To meeting: Wrong answer', { exact: true }).waitFor();
-    await expectAudio(value => value > .001, 'Key 9 plays Wrong answer to the receiver');
-    await cards.first().press('Escape');
-    await expectAudio(value => value < .001, 'Escape stops the effect');
+    await expectAudio(value => value < .001, 'Voice is excluded before checking shortcuts');
+    for (const [key, name] of [['6', 'Luigi Yahoo!'], ['8', "I'll be back"], ['9', 'Punch']]) {
+      await cards.first().press(key);
+      await page.getByText(`To meeting: ${name}`, { exact: true }).waitFor();
+      await expectAudio(value => value > .001, `Key ${key} plays ${name} to the receiver`);
+      await cards.first().press('Escape');
+      await expectAudio(value => value < .001, 'Escape stops the effect');
+    }
     await page.getByLabel('Include my voice', { exact: true }).check();
   });
 

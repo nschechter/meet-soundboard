@@ -1,0 +1,16 @@
+{
+  "version": "1.5.15",
+  "source": "Extension loaded from the unpacked release ZIP. Screenshots use a local demo page and real local WebRTC peers, not a live Google Meet call.",
+  "screenshots": [
+    "01-classic-reactions.png",
+    "02-your-own-sounds.png",
+    "03-trim-and-preview.png"
+  ],
+  "screenshotDimensions": [
+    1280,
+    800
+  ],
+  "customClip": "An original generated chime. No private clips, recordings, or user profiles are used.",
+  "browser": "158.0.8127.18",
+  "pageErrors": []
+}

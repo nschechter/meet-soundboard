@@ -15,7 +15,7 @@
     "name": "Applause",
     "icon": "👏",
     "category": "Reactions",
-    "duration": 3.2,
+    "duration": 3.038,
     "color": "green",
     "library": "effects"
   },
@@ -47,12 +47,12 @@
     "library": "effects"
   },
   {
-    "id": "eggs",
-    "name": "Egg attack",
-    "icon": "🥚",
-    "category": "Comedy",
-    "duration": 1.381,
-    "color": "yellow",
+    "id": "luigi_yahoo",
+    "name": "Luigi Yahoo!",
+    "icon": "🎮",
+    "category": "Gaming",
+    "duration": 1.968,
+    "color": "green",
     "library": "effects"
   },
   {
@@ -60,25 +60,25 @@
     "name": "Tomato splat",
     "icon": "🍅",
     "category": "Comedy",
-    "duration": 1.381,
+    "duration": 0.55,
     "color": "orange",
     "library": "effects"
   },
   {
-    "id": "scratch",
-    "name": "Record scratch",
-    "icon": "💿",
-    "category": "Comedy",
-    "duration": 0.85,
+    "id": "ill_be_back",
+    "name": "I'll be back",
+    "icon": "🕶️",
+    "category": "Quotes",
+    "duration": 3.018,
     "color": "purple",
     "library": "effects"
   },
   {
-    "id": "buzzer",
-    "name": "Wrong answer",
-    "icon": "❌",
-    "category": "Reactions",
-    "duration": 0.61,
+    "id": "punch",
+    "name": "Punch",
+    "icon": "🥊",
+    "category": "Comedy",
+    "duration": 0.366,
     "color": "blue",
     "library": "effects"
   },
@@ -87,7 +87,7 @@
     "name": "Laugh track",
     "icon": "😂",
     "category": "Comedy",
-    "duration": 2.05,
+    "duration": 4.43,
     "color": "yellow",
     "library": "effects"
   },
@@ -105,7 +105,7 @@
     "name": "Quack",
     "icon": "🦆",
     "category": "Comedy",
-    "duration": 0.383,
+    "duration": 0.169,
     "color": "yellow",
     "library": "effects"
   },
@@ -114,7 +114,7 @@
     "name": "Crickets",
     "icon": "🦗",
     "category": "Comedy",
-    "duration": 2.7,
+    "duration": 4.025,
     "color": "green",
     "library": "effects"
   },
@@ -132,7 +132,7 @@
     "name": "Dramatic boom",
     "icon": "💥",
     "category": "Hype",
-    "duration": 1.344,
+    "duration": 2.905,
     "color": "orange",
     "library": "effects"
   }

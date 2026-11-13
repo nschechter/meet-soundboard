@@ -61,7 +61,8 @@ globalThis.MeetSoundboardStyle = `
   .blue .sound-icon { background: #e6eef7; }
   .sound-name { font-size: 11px; font-weight: 650; width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
   .sound-meta { font-size: 10px; color: #5d6c51; margin-top: 3px; }
-  .custom-grid .sound-meta { padding-right: 22px; }
+  .custom-grid .trigger { padding-bottom: 38px; }
+  .edit-sound { position: absolute; bottom: 6px; left: 9px; border: 0; border-radius: 5px; padding: 4px 8px; background: #edf1e4; color: #435733; font-size: 10px; font-weight: 600; }
   .preview { position: absolute; top: 9px; right: 7px; border: 0; background: transparent; color: #657658; width: 26px; height: 26px; border-radius: 6px; font-size: 14px; }
   .preview:hover { color: #34482c; background: #e9efdd; }
   .remove { position: absolute; bottom: 5px; right: 5px; background: #fffef9; border: 0; font-size: 15px; color: #945b4f; border-radius: 4px; width: 26px; height: 26px; }
@@ -71,6 +72,50 @@ globalThis.MeetSoundboardStyle = `
   .add-card span { font-size: 25px; line-height: 1; }
   .add-card:hover { background: #e6efcf; border-color: #819763; }
   .upload { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; border: 1px dashed #bac8a5; border-radius: 11px; background: #f2f5e8; padding: 15px; font-size: 12px; font-weight: 600; margin-top: 12px; }
+  .upload-icon { font-size: 27px; font-weight: 400; }
+  .upload small { display: block; font-size: 10px; font-weight: 400; color: #59694b; margin-top: 3px; }
+  .drop-target { position: absolute; inset: 7px; border: 2px dashed #839d5c; border-radius: 17px; background: #f0f6e7f5; z-index: 5; pointer-events: none; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 20px; text-align: center; }
+  .drop-target > span { background: #dcebbf; border-radius: 50%; width: 66px; height: 66px; font-size: 36px; margin-bottom: 20px; }
+  .drop-target strong { font-size: 20px; letter-spacing: -.5px; }
+  .drop-target p { font-size: 12px; color: #536445; }
+  .panel.editing > .intro, .panel.editing > .connection, .panel.editing > .scroll, .panel.editing > .controls, .panel.editing > footer { display: none; }
+  .clip-editor { display: flex; flex-direction: column; min-height: 0; }
+  .editor-scroll { overflow-y: auto; min-height: 0; padding: 0 20px 14px; overscroll-behavior: contain; scrollbar-width: thin; }
+  .clip-editor h2 { margin: 0 0 20px; font-size: 25px; font-weight: 650; letter-spacing: -.8px; line-height: 1.2; }
+  .editor-status:empty { display: none; }
+  .editor-status { font-size: 11px; color: #5d6c51; }
+  .editor-label, .gain-heading, .wave-label { font-size: 11px; font-weight: 650; }
+  #clip-name, .trim-fields input { display: block; width: 100%; background: #fffef9; color: #202c25; border: 1px solid #ccd5be; border-radius: 8px; padding: 9px 10px; margin-top: 6px; }
+  #clip-name { font-size: 13px; }
+  .wave-label, .gain-heading { display: flex; justify-content: space-between; gap: 8px; margin: 21px 0 10px; }
+  .selection-length, .gain-value { color: #50653a; font-variant-numeric: tabular-nums; }
+  .selection-length.too-long { color: #a33d23; }
+  .waveform { position: relative; height: 96px; background: #283625; border-radius: 10px; margin: 0 7px; touch-action: none; }
+  .waveform canvas { display: block; width: 100%; height: 100%; border-radius: 10px; }
+  .wave-selection { position: absolute; top: 0; height: 100%; border-top: 2px solid #c9ec8d; border-bottom: 2px solid #c9ec8d; pointer-events: none; background: #c9ec8d09; }
+  .trim-handle { position: absolute; top: -3px; bottom: -3px; width: 14px; transform: translateX(-50%); background: #d6f2a7; border: 1px solid #d6f2a7; border-radius: 4px; padding: 0; cursor: ew-resize; touch-action: none; }
+  .trim-handle::after { content: ''; position: absolute; top: 38%; bottom: 38%; width: 2px; left: 5px; border-radius: 2px; background: #506139; }
+  .playhead { position: absolute; top: 5px; bottom: 5px; width: 2px; background: white; pointer-events: none; }
+  .wave-times { display: flex; justify-content: space-between; margin-top: 8px; color: #5d6c51; font-size: 10px; font-variant-numeric: tabular-nums; }
+  .trim-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 13px; }
+  .trim-fields label { font-size: 11px; font-weight: 600; }
+  .trim-fields label span { color: #5d6c51; font-weight: 400; font-size: 10px; margin-left: 4px; }
+  .trim-fields input { font-size: 12px; font-variant-numeric: tabular-nums; padding: 7px 9px; }
+  .selection-actions { display: flex; gap: 8px; margin-top: 12px; }
+  .reset-clip { border: 1px solid #ccd5be; border-radius: 8px; background: #fffef9; padding: 9px 13px; font-size: 11px; }
+  .reset-clip:hover { background: #edf3e1; }
+  #clip-gain { display: block; width: 100%; }
+  .gain-scale { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; font-size: 10px; color: #5d6c51; }
+  .boost-clip { border: 0; padding: 4px 8px; border-radius: 5px; background: #e8efd9; color: #3a5028; font-size: 10px; font-weight: 650; }
+  .editor-fade { margin-top: 12px; }
+  .editor-hint { color: #5d6c51; font-size: 10px; line-height: 1.5; margin: 6px 0 14px; }
+  .editor-preview { flex: 1; border: 1px solid #344c25; border-radius: 8px; padding: 10px; background: #344c25; color: #f8fbee; font-weight: 650; font-size: 12px; }
+  .editor-preview:hover { background: #405d2d; }
+  .editor-local { font-size: 10px; color: #5d6c51; margin: 7px 0 0; }
+  .editor-footer { display: flex; gap: 10px; justify-content: flex-end; padding: 14px 20px; border-top: 1px solid #dce3d1; background: #f2f5e9; flex: none; }
+  .editor-footer button { font-size: 12px; font-weight: 650; padding: 9px 16px; border-radius: 8px; border: 1px solid #cdd8bf; background: #fffef9; }
+  .editor-footer .editor-save { background: #344c25; border-color: #344c25; color: #f8fbee; }
+  .editor-error { color: #963c26; background: #fff0e8; border-radius: 8px; padding: 10px; font-size: 11px; line-height: 1.5; }
   .empty { text-align: center; padding: 23px 12px 12px; color: #647257; font-size: 12px; }
   .empty b { display: block; color: #39452f; margin-bottom: 5px; font-size: 14px; }
   .controls { flex: none; border-top: 1px solid #e0e5d8; padding: 12px 20px 9px; background: #f8f9f3; }

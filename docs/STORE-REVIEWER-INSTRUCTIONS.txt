@@ -1,0 +1,48 @@
+Meet Soundboard 1.5.15
+
+These notes describe the 1.5.15 package saved in the store dashboard. The nine requested replacement recordings remain unverified for redistribution and are retained at the publisher's direction. SOUND-CREDITS.txt lists the sources and limits.
+
+Purpose
+Play built-in sound effects or the user's own clips into their outgoing Google Meet audio. There is no separate extension login, paid feature, developer server, analytics, or remote code.
+
+Requirements
+Use desktop Chrome, your own Google Meet account, headphones, and a second participant or device in an empty test call. Mute the receiving device microphone. The extension runs only on https://meet.google.com/*.
+
+Start
+1. Reload Meet after installing the exact package.
+2. Start a call with the microphone on. The camera can stay off.
+3. Turn off noise cancellation or Studio sound for the sound test. Turn off Adaptive audio if available so nearby computers do not merge their audio. The extension never changes these settings automatically.
+4. Open the small waveform button beside Meet's lower-right controls. In narrow windows it moves above the controls. The extension toolbar popup can also open the panel.
+5. Click Turn on. The status should show Connected to meeting audio. If audio stays paused, turn the board off, mute and unmute in Meet, and turn the board back on. Check Adaptive audio before retrying.
+
+Test audio
+6. Click Correct! or Air horn. The second participant should hear it. Hear effects too is on by default, so the sender hears it too.
+7. Speak while playing an effect with Include my voice checked. Both should reach the receiver.
+8. Uncheck Include my voice. Effects should arrive without voice. Change microphones while speaking and confirm voice stays excluded. Check Include my voice again to restore it.
+9. Mute in Meet. Neither voice nor effects from that computer should arrive. Unmute to continue.
+10. Use a small preview button. Only the sender should hear it. Stop all should stop playback immediately.
+11. Turn off Hear effects too. An outgoing effect should still reach the receiver. Small preview buttons remain local previews.
+12. Turn the board off. Normal voice should return. Turn it on again and repeat playback.
+13. If Meet pauses outgoing audio, main cards preview locally when Hear effects too is on. The board says when playback is local only. An existing preview must stay local when sending resumes. The next tap can send to the call.
+
+Custom clips
+14. Drop a file onto the open board or choose Add a sound. Import up to 2 minutes and 10 MB. Use a recording you have permission to use.
+15. Select up to 30 seconds with the waveform handles. Adjust volume up to 300%. Play selection previews that part locally with the chosen volume. Reset restores the full selection and volume.
+16. Save, preview the saved card, play it to the call, edit it, and delete it. The library holds up to 12 clips and 8 MB. Each saved clip stays under 2 MB.
+17. Imports and editor previews stay in the isolated extension context. Saved-card previews and playback pass audio bytes into the Meet page mixer.
+
+Further checks
+18. Leave and rejoin the empty call. Repeat voice and effect playback.
+19. Keys 1 through 9 play the first nine effects while the panel has focus. Escape stops playback.
+
+Implementation and privacy
+The engine uses browser audio APIs to mix effects with outgoing WebRTC audio. It runs in the Meet page's MAIN world. Video and screen-share tracks are excluded. This is an independent integration, not an official Google Meet API feature.
+
+Meet mute and microphone permission still apply. The extension does not record microphone or meeting audio. Imported clips and preferences stay in Chrome's local extension storage. The code uses the MIT License. Audio has separate terms listed in SOUND-CREDITS.txt. Studio sound automation is excluded.
+
+Privacy policy
+https://github.com/nschechter/meet-soundboard/blob/main/docs/PRIVACY.md
+
+Source and support
+https://github.com/nschechter/meet-soundboard
+https://github.com/nschechter/meet-soundboard/issues

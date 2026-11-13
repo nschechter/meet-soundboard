@@ -10,12 +10,16 @@
   },
   {
     "id": "applause",
-    "author": "kywr",
-    "source": "https://freesound.org/people/kywr/sounds/241985/",
-    "preview": "https://cdn.freesound.org/previews/241/241985_2413649-hq.mp3",
-    "title": "Freesound - small Applause by kywr",
-    "bytes": 167904,
-    "license": "CC0-1.0"
+    "author": "Bunksound (uploader attribution, original ownership unverified)",
+    "uploader": "Bunksound",
+    "source": "https://www.youtube.com/watch?v=dt8z2xXDmZ8",
+    "title": "Discord (Soundboard) ~ Golf Clap - Sound Effect (Free No Copyright Sounds)",
+    "file": "applause.m4a",
+    "bytes": 53052,
+    "license": "LicenseRef-YouTube-Creative-Commons-Attribution",
+    "licenseDeclaration": "Creative Commons Attribution license (reuse allowed)",
+    "attribution": "https://youtu.be/dt8z2xXDmZ8 by Bunksound",
+    "redistribution": "The uploader labels the video Creative Commons Attribution and asks for credit. Original ownership and clearance to bundle the recording remain unverified."
   },
   {
     "id": "rimshot",
@@ -28,12 +32,15 @@
   },
   {
     "id": "crickets",
-    "author": "FreethinkerAnon",
-    "source": "https://freesound.org/people/FreethinkerAnon/sounds/129678/",
-    "preview": "https://cdn.freesound.org/previews/129/129678_2362707-hq.mp3",
-    "title": "Freesound - crickets by FreethinkerAnon",
-    "bytes": 348144,
-    "license": "CC0-1.0"
+    "author": "Unknown",
+    "uploader": "Boundenivy38334",
+    "source": "https://www.myinstants.com/en/instant/awkward-cricket-74642/",
+    "preview": "https://www.myinstants.com/media/sounds/awkward-cricket-sound-effect.mp3",
+    "title": "Awkward cricket",
+    "file": "awkward-cricket-sound-effect.mp3",
+    "bytes": 71817,
+    "license": "NOASSERTION",
+    "redistribution": "Unverified. The source page provides a download but does not establish redistribution rights."
   },
   {
     "id": "trombone",
@@ -55,21 +62,24 @@
   },
   {
     "id": "quack",
-    "author": "Breviceps",
-    "source": "https://freesound.org/people/Breviceps/sounds/445960/",
-    "preview": "https://cdn.freesound.org/previews/445/445960_9159316-hq.mp3",
-    "title": "Freesound - Cartoon - Duck Quack by Breviceps",
-    "bytes": 11167,
-    "license": "CC0-1.0"
+    "author": "Unknown",
+    "source": "https://www.myinstants.com/",
+    "title": "User-provided quack_5.mp3",
+    "file": "quack.mp3",
+    "bytes": 3630,
+    "license": "NOASSERTION",
+    "redistribution": "Unverified. The user identified Myinstants as the source. No specific clip page or permission has been provided."
   },
   {
     "id": "boom",
-    "author": "doudar41",
-    "source": "https://freesound.org/people/doudar41/sounds/728515/",
-    "preview": "https://cdn.freesound.org/previews/728/728515_2393492-hq.mp3",
-    "title": "Impact Hit at soft but big material",
-    "bytes": 32304,
-    "license": "CC0-1.0"
+    "author": "Bluezone Corporation (original Vine boom)",
+    "source": "https://www.youtube.com/watch?v=TApmI8YtYhc",
+    "title": "Dramatic Vine/Instagram Boom - Sound Effect (HD)",
+    "file": "vine-boom.webm",
+    "bytes": 34521,
+    "license": "LicenseRef-Bluezone-Vine-Boom",
+    "terms": "https://www.bluezone-corporation.com/blog/original-vine-boom-sound-effect",
+    "redistribution": "The creator license excludes sound libraries, plugins, and standalone downloads. Clearance for bundling this recording is pending."
   },
   {
     "id": "boo",
@@ -81,49 +91,64 @@
     "license": "CC0-1.0"
   },
   {
-    "id": "eggs",
-    "author": "davdud101",
-    "source": "https://freesound.org/people/davdud101/sounds/150479/",
-    "preview": "https://cdn.freesound.org/previews/150/150479_1883289-hq.mp3",
-    "title": "Freesound - Egg Crack by davdud101",
-    "bytes": 16596,
-    "license": "CC0-1.0"
+    "id": "luigi_yahoo",
+    "author": "Original rights holder unverified",
+    "uploader": "Okusama",
+    "source": "https://www.myinstants.com/en/instant/luigi-yahoo-18768/",
+    "preview": "https://www.myinstants.com/media/sounds/luigi-yahoo.mp3",
+    "title": "Luigi - Yahoo",
+    "file": "luigi-yahoo.mp3",
+    "bytes": 40281,
+    "license": "NOASSERTION",
+    "redistribution": "Game voice recording. The Myinstants download does not establish permission to redistribute it. Clearance to bundle the recording is unresolved."
   },
   {
     "id": "tomato",
-    "author": "Breviceps",
-    "source": "https://freesound.org/people/Breviceps/sounds/445117/",
-    "preview": "https://cdn.freesound.org/previews/445/445117_9159316-hq.mp3",
-    "title": "Freesound - Cartoon Splat by Breviceps",
-    "bytes": 13437,
-    "license": "CC0-1.0"
+    "author": "Unknown",
+    "uploader": "nick6730",
+    "source": "https://www.myinstants.com/en/instant/tomato-squash-74711/",
+    "preview": "https://www.myinstants.com/media/sounds/tomato-squash.mp3",
+    "title": "Tomato Squash",
+    "file": "tomato-squash.mp3",
+    "bytes": 23817,
+    "license": "NOASSERTION",
+    "redistribution": "Unverified. The source page provides a download but does not establish redistribution rights."
   },
   {
-    "id": "scratch",
-    "author": "musicvision31",
-    "source": "https://freesound.org/people/musicvision31/sounds/431774/",
-    "preview": "https://cdn.freesound.org/previews/431/431774_817038-hq.mp3",
-    "title": "Freesound - Record Scratch #1 by musicvision31",
-    "bytes": 48864,
-    "license": "CC0-1.0"
+    "id": "ill_be_back",
+    "author": "Original rights holder unverified",
+    "uploader": "herobrinebacon",
+    "source": "https://www.myinstants.com/en/instant/terminator-ill-be-back-74922/",
+    "preview": "https://www.myinstants.com/media/sounds/ill-be-back_T7Tkygy.mp3",
+    "title": "Terminator: I'll be back",
+    "file": "ill-be-back.mp3",
+    "bytes": 50501,
+    "license": "NOASSERTION",
+    "redistribution": "Movie dialogue. The Myinstants download does not establish permission to redistribute it. Clearance to bundle the recording is unresolved."
   },
   {
-    "id": "buzzer",
-    "author": "Beetlemuse",
-    "source": "https://freesound.org/people/Beetlemuse/sounds/528956/",
-    "preview": "https://cdn.freesound.org/previews/528/528956_10334845-hq.mp3",
-    "title": "Freesound - Wrong Answer / Incorrect / Error by Beetlemuse",
-    "bytes": 17194,
-    "license": "CC0-1.0"
+    "id": "punch",
+    "author": "Unknown",
+    "uploader": "muhammad89",
+    "source": "https://www.myinstants.com/en/instant/punch-effect-75919/",
+    "preview": "https://www.myinstants.com/media/sounds/punch_u4LmMsr.mp3",
+    "title": "Punch Effect",
+    "file": "punch.mp3",
+    "bytes": 3671,
+    "license": "NOASSERTION",
+    "redistribution": "Unverified. The source page provides a download but does not establish redistribution rights."
   },
   {
     "id": "laugh",
-    "author": "deleted_user_2104797",
-    "source": "https://freesound.org/people/deleted_user_2104797/sounds/324894/",
-    "preview": "https://cdn.freesound.org/previews/324/324894_2104797-hq.mp3",
-    "title": "Freesound - Crowd laugh.wav by deleted_user_2104797",
-    "bytes": 63288,
-    "license": "CC0-1.0"
+    "author": "Unknown",
+    "uploader": "usher361",
+    "source": "https://www.myinstants.com/en/instant/funny-laugh-track-7608/",
+    "preview": "https://www.myinstants.com/media/sounds/laugh-track-2-mp3cut.mp3",
+    "title": "Funny Laugh Track",
+    "file": "laugh-track-2-mp3cut.mp3",
+    "bytes": 73070,
+    "license": "NOASSERTION",
+    "redistribution": "Unverified. The source page provides a download but does not establish redistribution rights."
   },
   {
     "id": "cash",

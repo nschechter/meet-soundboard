@@ -9,11 +9,11 @@
   },
   {
     "id": "applause",
-    "duration": 3.2,
-    "gain": 1.294,
-    "peak": 0.79,
-    "bytes": 52287,
-    "start": 1.5
+    "duration": 3.038,
+    "gain": 1,
+    "peak": 0.7153,
+    "bytes": 267992,
+    "start": 0.19
   },
   {
     "id": "rimshot",
@@ -40,44 +40,44 @@
     "start": 0.94
   },
   {
-    "id": "eggs",
-    "duration": 1.381,
-    "gain": 0.771,
-    "peak": 0.79,
-    "bytes": 23030,
-    "start": 0
+    "id": "luigi_yahoo",
+    "duration": 1.968,
+    "gain": 1,
+    "peak": 0.8994,
+    "bytes": 173690,
+    "start": 0.28
   },
   {
     "id": "tomato",
-    "duration": 1.381,
-    "gain": 0.686,
-    "peak": 0.79,
-    "bytes": 23030,
+    "duration": 0.55,
+    "gain": 1,
+    "peak": 0.7401,
+    "bytes": 48588,
+    "start": 0.26
+  },
+  {
+    "id": "ill_be_back",
+    "duration": 3.018,
+    "gain": 1,
+    "peak": 0.5802,
+    "bytes": 266288,
+    "start": 0.07
+  },
+  {
+    "id": "punch",
+    "duration": 0.366,
+    "gain": 1,
+    "peak": 0.85,
+    "bytes": 32334,
     "start": 0
   },
   {
-    "id": "scratch",
-    "duration": 0.85,
-    "gain": 0.432,
-    "peak": 0.6509,
-    "bytes": 14671,
-    "start": 0.4
-  },
-  {
-    "id": "buzzer",
-    "duration": 0.61,
-    "gain": 1.155,
-    "peak": 0.7542,
-    "bytes": 10910,
-    "start": 0.035
-  },
-  {
     "id": "laugh",
-    "duration": 2.05,
-    "gain": 1.541,
-    "peak": 0.79,
-    "bytes": 33897,
-    "start": 0.57
+    "duration": 4.43,
+    "gain": 1,
+    "peak": 0.6464,
+    "bytes": 390804,
+    "start": 0.07
   },
   {
     "id": "cash",
@@ -89,19 +89,19 @@
   },
   {
     "id": "quack",
-    "duration": 0.383,
-    "gain": 0.613,
-    "peak": 0.7704,
-    "bytes": 7148,
+    "duration": 0.169,
+    "gain": 1,
+    "peak": 0.8297,
+    "bytes": 15010,
     "start": 0
   },
   {
     "id": "crickets",
-    "duration": 2.7,
-    "gain": 5.129,
-    "peak": 0.7497,
-    "bytes": 44346,
-    "start": 1
+    "duration": 4.025,
+    "gain": 1.8,
+    "peak": 0.5722,
+    "bytes": 355084,
+    "start": 0.41
   },
   {
     "id": "trombone",
@@ -113,10 +113,10 @@
   },
   {
     "id": "boom",
-    "duration": 1.344,
-    "gain": 0.386,
-    "peak": 0.6365,
-    "bytes": 22612,
-    "start": 0
+    "duration": 2.905,
+    "gain": 1,
+    "peak": 0.8553,
+    "bytes": 256324,
+    "start": 0.19
   }
 ]

@@ -27,11 +27,12 @@
         <div class="notice" role="alert" hidden></div>
         <div class="tabs" role="tablist" aria-label="Sound library"><button class="tab" id="effects-tab" role="tab" aria-selected="true" aria-controls="effects-panel" data-tab="effects">Sound effects <span class="count">${builtins.length}</span></button><button class="tab" id="custom-tab" role="tab" aria-selected="false" aria-controls="custom-panel" tabindex="-1" data-tab="custom">My sounds <span class="count custom-count">0</span></button></div>
         <div id="effects-panel" role="tabpanel" aria-labelledby="effects-tab"><div class="grid builtin-grid"></div><p class="library-note"><span>${builtins.length} classic reactions. Perfect timing.</span><span>▷ = preview</span></p></div>
-        <div id="custom-panel" role="tabpanel" aria-labelledby="custom-tab" hidden><div class="grid custom-grid"></div><div class="empty"><b>Your own kind of funny.</b>Add a clip and make it yours.</div><button class="upload">＋ Add a sound</button><input class="file" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.webm" hidden><p class="privacy-note">Previewing or playing a clip shares it with this Meet page. Playing to the meeting sends it to participants. Only add clips you have permission to use.</p><p class="library-note">Up to 30 seconds and 2 MB per clip. Saved on this device.</p></div>
-        <details><summary>A few things to know</summary><p>Audio is mixed in this Meet page. Nothing is recorded or sent to the developer. This is an independent extension, not made by Google.</p><p>Keep your Meet mic on to send effects. To play only effects, uncheck “Include my voice.”</p><p>If effects get filtered out, try turning off noise cancellation or Studio sound in Meet → Settings → Audio. Use headphones for previews and local playback.</p><p>While this panel is focused: <kbd>1</kbd>–<kbd>9</kbd> play the first nine sounds in the Sound effects tab. <kbd>Esc</kbd> stops playback. The small ▷ buttons preview only for you.</p></details>
+        <div id="custom-panel" role="tabpanel" aria-labelledby="custom-tab" hidden><div class="grid custom-grid"></div><div class="empty"><b>Your own kind of funny.</b>Drop a clip. Find the good part. Make it yours.</div><button class="upload"><span class="upload-icon" aria-hidden="true">＋</span><span>Add a sound<small>or drop an audio file anywhere on this board</small></span></button><input class="file" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.webm,.flac,.aac" hidden><p class="privacy-note">Only add clips you have permission to use. Playing a saved clip shares it with this Meet page and, when sent to the meeting, its participants.</p><p class="library-note">Import up to 2 minutes / 10 MB. Save a clip up to 30 seconds. Stored on this device.</p></div>
+        <details><summary>A few things to know</summary><p>Audio is mixed in this Meet page. Nothing is recorded or sent to the developer. This is an independent extension, not made by Google.</p><p>Keep your Meet mic on to send effects. To play only effects, uncheck “Include my voice.”</p><p>If effects get filtered out, try turning off noise cancellation or Studio sound in Meet → Settings → Audio. Turn off Adaptive audio if Meet merges nearby computers. Use headphones for previews and local playback.</p><p>While this panel is focused: <kbd>1</kbd>–<kbd>9</kbd> play the first nine sounds in the Sound effects tab. <kbd>Esc</kbd> stops playback. The small ▷ buttons preview only for you.</p></details>
       </div>
-      <div class="controls"><div class="volume-row"><label class="volume-label" for="effect-volume">Effect volume</label><input id="effect-volume" type="range" min="0" max="100" value="65"><output for="effect-volume">65%</output></div><div class="settings-row"><label class="setting" for="include-voice" title="Only changes your voice while the soundboard is on"><input id="include-voice" type="checkbox" checked>Include my voice</label><label class="setting" for="hear-effects" title="Use headphones so your microphone does not pick up the effect twice"><input id="hear-effects" type="checkbox">Hear effects too</label></div></div>
+      <div class="controls"><div class="volume-row"><label class="volume-label" for="effect-volume">Effect volume</label><input id="effect-volume" type="range" min="0" max="100" value="65"><output for="effect-volume">65%</output></div><div class="settings-row"><label class="setting" for="include-voice" title="Only changes your voice while the soundboard is on"><input id="include-voice" type="checkbox" checked>Include my voice</label><label class="setting" for="hear-effects" title="Play effects on your device too. Use headphones to avoid echo."><input id="hear-effects" type="checkbox" checked>Hear effects too</label></div></div>
       <footer><span class="now-playing" role="status">Ready for your next cue</span><button class="stop">■ Stop all</button></footer>
+      <div class="drop-target" hidden><span aria-hidden="true">↓</span><strong>Drop your next great sound</strong><p>Trim it, boost it, make it yours.</p></div>
     </section>`;
   root.append(shell);
   const $ = (selector) => root.querySelector(selector);
@@ -67,10 +68,27 @@
 
   let current = { enabled: false, state: "off" };
   let custom = [];
-  let prefs = { volume: 0.65, hearEffects: false, includeVoice: true };
+  let prefs = { volume: 0.65, hearEffects: true, includeVoice: true };
   let saveTimer;
   let noticeTimer;
+  let noticeState = null;
   let currentTab = "effects";
+  const editor = MeetSoundboardEditor.create({
+    root,
+    onPreview: () => send("stop"),
+    onClose: () => { setTab("custom"); $(".upload").focus(); },
+    onSave: async (clip, existing) => {
+      await changeSounds((sounds) => {
+        if (!existing) return [...sounds, { ...clip, id: crypto.randomUUID() }];
+        const saved = sounds.find((sound) => sound.id === existing.id);
+        if (!saved) throw new Error("This sound was deleted in another tab. Cancel and add it again.");
+        if (saved.data !== existing.data || saved.name !== existing.name) throw new Error("This sound changed in another tab. Cancel and reopen it to edit the latest version.");
+        return sounds.map((sound) => sound.id === existing.id ? { ...clip, id: existing.id } : sound);
+      });
+      if (existing?.id === current.playing) send("stop");
+      notice(`${existing ? "Updated" : "Added"} ${clip.name}. Use ▷ to preview it.`);
+    }
+  });
 
   function savedSounds(value) {
     if (!Array.isArray(value)) return [];
@@ -101,15 +119,26 @@
     window.postMessage({ channel, from: "panel", type, ...payload }, location.origin);
   }
 
-  function notice(message) {
+  function clearNotice() {
     clearTimeout(noticeTimer);
+    noticeState = null;
+    $(".notice").hidden = true;
+  }
+
+  function notice(message, forState = null) {
+    clearTimeout(noticeTimer);
+    noticeState = forState;
     $(".notice").textContent = message;
     $(".notice").hidden = false;
     $(".scroll").scrollTop = 0;
-    noticeTimer = setTimeout(() => { $(".notice").hidden = true; }, 9000);
+    noticeTimer = setTimeout(clearNotice, 9000);
   }
 
   function setOpen(open) {
+    if (!open && editor.isOpen) {
+      if (editor.isSaving) return;
+      editor.close();
+    }
     $(".panel").hidden = !open;
     $(".launcher").hidden = open;
     $(".launcher").setAttribute("aria-expanded", String(open));
@@ -133,9 +162,13 @@
   }
 
   function play(sound, preview = false) {
+    if (!preview && current.state === "paused" && current.hearEffects === true) {
+      preview = true;
+      notice("Playing only for you. Meeting playback is paused.", current.state);
+    }
     if (!preview && current.state !== "ready") {
-      if (current.state === "paused") { notice("Meet has paused outgoing audio. Unmute, or leave and rejoin the call."); return; }
-      notice(current.enabled ? "Join the call and unmute in Meet before playing to everyone." : "Click Turn on first, or use ▷ to preview a sound.");
+      if (current.state === "paused") { notice("Soundboard audio is paused. Use ▷ to preview, or follow the reconnect steps above.", current.state); return; }
+      notice(current.enabled ? "Join the call and unmute in Meet before playing to everyone." : "Click Turn on first, or use ▷ to preview a sound.", current.state);
       return;
     }
     try {
@@ -160,7 +193,7 @@
     if (isCustom) button.title = sound.name;
     const meta = document.createElement("span");
     meta.className = "sound-meta";
-    meta.textContent = `${isCustom ? "Your sound" : sound.category} · ${sound.duration.toFixed(1)}s`;
+    meta.textContent = `${sound.duration.toFixed(1)}s`;
     if (sound.work) meta.title = sound.work;
     button.append(icon, name, meta);
     button.addEventListener("click", (event) => { if (event.isTrusted) play(sound); });
@@ -172,6 +205,14 @@
     preview.addEventListener("click", (event) => { if (event.isTrusted) play(sound, true); });
     card.append(button, preview);
     if (isCustom) {
+      const edit = document.createElement("button");
+      edit.className = "edit-sound";
+      edit.textContent = "Edit";
+      edit.setAttribute("aria-label", `Edit ${sound.name}`);
+      edit.addEventListener("click", (event) => {
+        if (!event.isTrusted) return;
+        editor.open(new File([decode(sound.data)], sound.name), sound);
+      });
       const remove = document.createElement("button");
       remove.className = "remove";
       remove.textContent = "×";
@@ -183,7 +224,7 @@
           if (current.playing === sound.id) send("stop");
         } catch { notice("Could not delete that sound. Please try again."); }
       });
-      card.append(remove);
+      card.append(edit, remove);
     } else {
       button.title = index < 9 ? `Play to meeting (key ${index + 1} while panel is focused)` : "Play to meeting";
     }
@@ -194,20 +235,23 @@
     $(".custom-grid").replaceChildren(...custom.map((sound, index) => makeCard(sound, index, true)));
     $(".custom-count").textContent = String(custom.length);
     $(".empty").hidden = custom.length > 0;
+    update(current);
   }
 
   function update(status) {
+    const reconnectHelp = "To reconnect, turn the board off, mute and unmute in Meet, then turn the board back on.";
     const states = {
       off: ["Soundboard is off", "Turn on to mix sounds with your Meet microphone and send them to the call."],
       waiting: ["Waiting for meeting audio", "Join a call with your microphone on. Reload Meet if this stays here."],
       ready: ["Connected to meeting audio", "If effects get cut off, turn off Studio sound or noise cancellation in Meet."],
       muted: ["Your Meet mic is muted", "Unmute in Meet to send effects to the call."],
-      paused: ["Meet audio is paused", "Unmute in Meet. If this stays paused, leave and rejoin the call."],
+      paused: ["Soundboard audio is paused", `${status.hearEffects === true ? "Sounds play only for you for now." : "Use ▷ to preview sounds."} ${reconnectHelp}`],
       suspended: ["Audio needs a click", "Click Resume to allow sound playback."]
     };
     if (typeof status.state !== "string" || !Object.hasOwn(states, status.state) || typeof status.enabled !== "boolean" || typeof status.includeVoice !== "boolean") return;
     if (status.playing !== null && (typeof status.playing !== "string" || status.playing.length > 80)) return;
     status.error = typeof status.error === "string" ? status.error.slice(0, 300) : "";
+    if (noticeState && noticeState !== status.state) clearNotice();
     current = status;
     const [title, help] = states[status.state] || states.off;
     $(".connection").dataset.state = status.state;
@@ -218,9 +262,17 @@
     $(".launcher").title = $(".launcher-label").textContent;
     $(".power").textContent = status.state === "suspended" ? "Resume" : status.enabled ? "Turn off" : "Turn on";
     $(".power").title = status.enabled && !status.includeVoice ? "Turning off restores your voice to Meet's microphone." : "";
+    const localOnly = status.state === "paused" && status.hearEffects === true;
     for (const card of root.querySelectorAll(".sound")) {
       card.classList.toggle("playing", card.dataset.id === status.playing && !status.preview);
       card.classList.toggle("previewing", card.dataset.id === status.playing && status.preview);
+      const button = card.querySelector(".trigger");
+      const name = card.querySelector(".sound-name").textContent;
+      const action = `Play ${name} ${localOnly ? "only for me" : "to meeting"}`;
+      const index = builtins.findIndex((sound) => sound.id === card.dataset.id);
+      button.setAttribute("aria-label", action);
+      const hint = localOnly ? "Play only for me" : "Play to meeting";
+      button.title = index < 0 ? action : index < 9 ? `${hint} (key ${index + 1} while panel is focused)` : hint;
     }
     const sound = [...allSounds, ...custom].find((entry) => entry.id === status.playing);
     $(".now-playing").textContent = sound ? `${status.preview ? "Preview" : "To meeting"}: ${sound.name}` : "Ready for your next cue";
@@ -232,12 +284,12 @@
   const addCard = document.createElement("button");
   addCard.className = "add-card";
   addCard.innerHTML = '<span aria-hidden="true">＋</span>Add your own';
-  addCard.addEventListener("click", () => { setTab("custom"); $(".file").click(); });
+  addCard.addEventListener("click", (event) => { if (event.isTrusted) { setTab("custom"); $(".file").click(); } });
   $(".builtin-grid").append(addCard);
   $(".launcher").addEventListener("click", () => setOpen(true));
   $(".close").addEventListener("click", () => setOpen(false));
   $(".power").addEventListener("click", () => send(!current.enabled || current.state === "suspended" ? "activate" : "deactivate"));
-  $(".stop").addEventListener("click", () => send("stop"));
+  $(".stop").addEventListener("click", () => { editor.stop(); send("stop"); });
   for (const button of root.querySelectorAll(".tab")) {
     button.addEventListener("click", () => setTab(button.dataset.tab));
     button.addEventListener("keydown", (event) => {
@@ -254,6 +306,10 @@
   root.addEventListener("keydown", (event) => {
     if (!event.isTrusted) return;
     event.stopPropagation();
+    if (editor.isOpen) {
+      if (event.key === "Escape") { event.preventDefault(); editor.close(); send("stop"); }
+      return;
+    }
     if (event.key === "Escape") { event.preventDefault(); send("stop"); return; }
     if (event.repeat || event.ctrlKey || event.metaKey || event.altKey || event.target.matches("input, textarea")) return;
     if (/^[1-9]$/.test(event.key) && !$(".panel").hidden && currentTab !== "custom") {
@@ -264,50 +320,67 @@
   });
   root.addEventListener("keyup", (event) => event.stopPropagation());
 
-  function configure() {
+  function configure(event) {
     prefs = { volume: Number($("#effect-volume").value) / 100, hearEffects: $("#hear-effects").checked, includeVoice: $("#include-voice").checked };
     $("output").value = `${Math.round(prefs.volume * 100)}%`;
+    if (event.target === $("#hear-effects") && !prefs.hearEffects && current.preview) send("stop");
     send("configure", prefs);
     clearTimeout(saveTimer);
-    saveTimer = setTimeout(() => chrome.storage.local.set({ prefs }).catch(() => notice("Could not save settings. Reload the Meet tab.")), 200);
+    const save = () => chrome.storage.local.set({ prefs }).catch(() => notice("Could not save settings. Reload the Meet tab."));
+    if (event.type === "input") saveTimer = setTimeout(save, 200);
+    else void save();
   }
   $("#effect-volume").addEventListener("input", configure);
   $("#hear-effects").addEventListener("change", configure);
   $("#include-voice").addEventListener("change", configure);
-  $(".upload").addEventListener("click", () => $(".file").click());
+  $(".upload").addEventListener("click", (event) => { if (event.isTrusted) $(".file").click(); });
 
-  async function validate(bytes) {
-    const context = new OfflineAudioContext(1, 1, 44100);
-    let buffer;
-    try {
-      buffer = await context.decodeAudioData(bytes.slice(0));
-    } catch {
-      throw new Error("Chrome could not read this audio. Try an MP3 or WAV file.");
-    }
-    if (!Number.isFinite(buffer.duration) || buffer.duration <= 0 || buffer.duration > 30) throw new Error("Choose a clip that is 30 seconds or shorter.");
-    return buffer.duration;
+  function importFile(file) {
+    if (!file || editor.isOpen) return;
+    if (custom.length >= 12) { notice("Your board holds 12 custom sounds. Delete one to add another."); return; }
+    setTab("custom");
+    void editor.open(file);
   }
 
-  $(".file").addEventListener("change", async (event) => {
+  $(".file").addEventListener("change", (event) => {
+    if (!event.isTrusted) return;
     const file = event.target.files[0];
     event.target.value = "";
-    if (!file) return;
-    $(".upload").disabled = true;
-    try {
-      if (file.size > 2 * 1024 * 1024) throw new Error("Choose an audio file smaller than 2 MB.");
-      if (custom.length >= 12) throw new Error("Your board holds 12 custom sounds. Delete one to add another.");
-      const bytes = await file.arrayBuffer();
-      const duration = await validate(bytes);
-      let binary = "";
-      const data = new Uint8Array(bytes);
-      for (let offset = 0; offset < data.length; offset += 8192) binary += String.fromCharCode(...data.subarray(offset, offset + 8192));
-      const sound = { id: crypto.randomUUID(), name: file.name.replace(/\.[^.]+$/, "").slice(0, 60) || "My sound", duration, data: btoa(binary) };
-      await changeSounds((sounds) => [...sounds, sound]);
-      notice(`Added ${sound.name}. Use ▷ to preview it.`);
-    } catch (error) {
-      notice(error.message || "This file could not be added. Try MP3 or WAV.");
-    } finally { $(".upload").disabled = false; }
+    importFile(file);
   });
+
+  let dragDepth = 0;
+  function clearDrop() { dragDepth = 0; $(".drop-target").hidden = true; }
+  function isFileDrag(event) { return event.dataTransfer?.types.includes("Files"); }
+  $(".panel").addEventListener("dragenter", (event) => {
+    if (!isFileDrag(event)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.isTrusted && !editor.isOpen) { dragDepth++; $(".drop-target").hidden = false; }
+  });
+  $(".panel").addEventListener("dragover", (event) => {
+    if (!isFileDrag(event)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    event.dataTransfer.dropEffect = editor.isOpen ? "none" : "copy";
+  });
+  $(".panel").addEventListener("dragleave", (event) => {
+    if (!isFileDrag(event)) return;
+    event.stopPropagation();
+    if (--dragDepth <= 0) clearDrop();
+  });
+  $(".panel").addEventListener("drop", (event) => {
+    if (!isFileDrag(event)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    clearDrop();
+    if (!event.isTrusted || editor.isOpen) return;
+    const files = [...event.dataTransfer.files];
+    if (files.length !== 1) { notice("Drop one sound at a time so you can edit it before saving."); return; }
+    importFile(files[0]);
+  });
+  window.addEventListener("dragend", clearDrop);
+  window.addEventListener("blur", clearDrop);
 
   window.addEventListener("message", (event) => {
     if (event.source !== window || event.origin !== location.origin) return;
@@ -331,7 +404,7 @@
     custom = savedSounds(stored.sounds);
     prefs = {
       volume: Number.isFinite(stored.prefs?.volume) ? Math.max(0, Math.min(1, stored.prefs.volume)) : 0.65,
-      hearEffects: stored.prefs?.hearEffects === true,
+      hearEffects: stored.prefs?.hearEffects !== false,
       includeVoice: stored.prefs?.includeVoice !== false
     };
     $("#effect-volume").value = String(Math.round(prefs.volume * 100));

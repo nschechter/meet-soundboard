@@ -1,35 +1,98 @@
 MEET SOUNDBOARD AUDIO CREDITS
 
-The fifteen sound effects listed in this section use CC0 1.0 Universal.
-License: https://creativecommons.org/publicdomain/zero/1.0/
+The standard 1.5.15 candidate uses the requested Golf Clap, Quack,
+Dramatic boom, Tomato Squash, Awkward cricket, Funny Laugh Track,
+I'll be back, Punch Effect, and Luigi - Yahoo recordings.
+Their redistribution clearance is unresolved.
+They are not verified as CC0 and are not covered by the code's MIT license.
+These recordings are included at the publisher's direction.
+No redistribution clearance is asserted by including them in this package.
 Checked November 12, 2026.
 
-The bundled audio uses the public high-quality MP3 previews. Changes include
-short excerpts, mono conversion, level adjustment, edge fades, and MP3 encoding.
-Crickets uses a low-frequency filter. BOOOOO! uses light compression and a
-louder level. Egg attack layers egg-crack foley with Cartoon Splat. Tomato
-splat uses Cartoon Splat. Both splat effects repeat three hits with small
-pitch changes. Source credits for these layers are included below.
-All clips use a 35 Hz high-pass filter. No Discord audio or branding is included.
+Applause
+Golf Clap, uploaded to YouTube by Bunksound.
+https://www.youtube.com/watch?v=dt8z2xXDmZ8
+Uploader license declaration: Creative Commons Attribution (reuse allowed).
+Requested credit: https://youtu.be/dt8z2xXDmZ8 by Bunksound
+Original ownership and clearance to bundle the recording are unverified.
+
+Quack
+User-provided quack_5.mp3. The user identified Myinstants as its source.
+https://www.myinstants.com/
+Creator and redistribution license: unverified.
+
+Dramatic boom
+Recording supplied through this reference:
+https://www.youtube.com/watch?v=TApmI8YtYhc
+Bluezone Corporation identifies itself as the creator of the original Vine boom.
+https://www.bluezone-corporation.com/blog/original-vine-boom-sound-effect
+The creator's free license allows several creative uses but excludes sound
+libraries, plugins, and standalone downloads. Permission to bundle this
+recording in the soundboard and its public source repository is pending.
+
+Tomato splat
+Tomato Squash, uploaded to Myinstants by nick6730.
+https://www.myinstants.com/en/instant/tomato-squash-74711/
+https://www.myinstants.com/media/sounds/tomato-squash.mp3
+Creator and redistribution license: unverified. The uploader is not
+assumed to be the copyright owner.
+
+Crickets
+Awkward cricket, uploaded to Myinstants by Boundenivy38334.
+https://www.myinstants.com/en/instant/awkward-cricket-74642/
+https://www.myinstants.com/media/sounds/awkward-cricket-sound-effect.mp3
+Creator and redistribution license: unverified. The uploader is not
+assumed to be the copyright owner.
+
+Laugh track
+Funny Laugh Track, uploaded to Myinstants by usher361.
+https://www.myinstants.com/en/instant/funny-laugh-track-7608/
+https://www.myinstants.com/media/sounds/laugh-track-2-mp3cut.mp3
+Creator and redistribution license: unverified. The uploader is not
+assumed to be the copyright owner.
+
+I'll be back
+Terminator: I'll be back, uploaded to Myinstants by herobrinebacon.
+https://www.myinstants.com/en/instant/terminator-ill-be-back-74922/
+https://www.myinstants.com/media/sounds/ill-be-back_T7Tkygy.mp3
+Movie dialogue. The original rights holder and permission to redistribute
+the recording are unverified. The uploader is not assumed to own it.
+
+Punch
+Punch Effect, uploaded to Myinstants by muhammad89.
+https://www.myinstants.com/en/instant/punch-effect-75919/
+https://www.myinstants.com/media/sounds/punch_u4LmMsr.mp3
+Creator and redistribution license: unverified. The uploader is not
+assumed to be the copyright owner.
+
+Luigi Yahoo!
+Luigi - Yahoo, uploaded to Myinstants by Okusama.
+https://www.myinstants.com/en/instant/luigi-yahoo-18768/
+https://www.myinstants.com/media/sounds/luigi-yahoo.mp3
+Game voice recording. The original rights holder and permission to
+redistribute it are unverified. The uploader is not assumed to own it.
+
+These nine recordings keep their original pitch. Opening silence is
+trimmed from the applause, boom, tomato, crickets, laugh track,
+I'll be back, and Luigi clips.
+Crickets has a 1.8x volume boost. Mono WAV conversion and peak limiting
+keep them ready for playback without changing them into new sounds.
+
+The other six effects below use CC0 1.0 Universal.
+License: https://creativecommons.org/publicdomain/zero/1.0/
+Their audio uses public high-quality MP3 previews with short excerpts,
+mono conversion, level adjustment, edge fades, and MP3 encoding.
+BOOOOO! uses light compression.
+These six effects use a 35 Hz high-pass filter.
 
 airhorn
 DJ airhorn sound by pfranzen
 https://freesound.org/people/pfranzen/sounds/528807/
 License: CC0 1.0 Universal
 
-applause
-small Applause by kywr
-https://freesound.org/people/kywr/sounds/241985/
-License: CC0 1.0 Universal
-
 rimshot
 Baddum Tish - Comedy Rimshots - classic rim shot.wav by OverlookHotelRecords
 https://freesound.org/people/OverlookHotelRecords/sounds/271208/
-License: CC0 1.0 Universal
-
-crickets
-crickets by FreethinkerAnon
-https://freesound.org/people/FreethinkerAnon/sounds/129678/
 License: CC0 1.0 Universal
 
 trombone
@@ -42,44 +105,9 @@ bell ding 1.wav by 5ro4
 https://freesound.org/people/5ro4/sounds/611113/
 License: CC0 1.0 Universal
 
-quack
-Cartoon - Duck Quack by Breviceps
-https://freesound.org/people/Breviceps/sounds/445960/
-License: CC0 1.0 Universal
-
-boom
-Impact Hit at soft but big material
-https://freesound.org/people/doudar41/sounds/728515/
-License: CC0 1.0 Universal
-
 boo
 CRWDAngr_Booing, Angry_ShaneVincent_GSC24_SpacedOmni-MK012.wav by ShangusBurger
 https://freesound.org/people/ShangusBurger/sounds/764251/
-License: CC0 1.0 Universal
-
-eggs
-Egg Crack by davdud101
-https://freesound.org/people/davdud101/sounds/150479/
-License: CC0 1.0 Universal
-
-tomato
-Cartoon Splat by Breviceps
-https://freesound.org/people/Breviceps/sounds/445117/
-License: CC0 1.0 Universal
-
-scratch
-Record Scratch #1 by musicvision31
-https://freesound.org/people/musicvision31/sounds/431774/
-License: CC0 1.0 Universal
-
-buzzer
-Wrong Answer / Incorrect / Error by Beetlemuse
-https://freesound.org/people/Beetlemuse/sounds/528956/
-License: CC0 1.0 Universal
-
-laugh
-Crowd laugh.wav by deleted_user_2104797
-https://freesound.org/people/deleted_user_2104797/sounds/324894/
 License: CC0 1.0 Universal
 
 cash

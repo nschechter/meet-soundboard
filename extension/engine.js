@@ -32,7 +32,7 @@
   let monitor;
   let enabled = false;
   let volume = 0.65;
-  let hearEffects = false;
+  let hearEffects = true;
   let includeVoice = true;
   let microphoneObserved = false;
   let playing;
@@ -89,6 +89,7 @@
     if (routes.has(input)) return routes.get(input);
     const source = context.createMediaStreamSource(new MediaStream([input]));
     const voice = context.createGain();
+    voice.gain.value = !enabled || includeVoice ? 1 : 0;
     const limiter = context.createDynamicsCompressor();
     limiter.threshold.value = -3;
     limiter.knee.value = 0;
@@ -199,20 +200,50 @@
     pc.addEventListener("track", (event) => excluded.add(event.track));
   }
 
+  function trackForSender(track) {
+    const input = originalTrack(track);
+    if (!enabled || !eligible(input) || (context?.state !== "running" && includeVoice)) return track;
+    try {
+      return routeFor(input).output;
+    } catch (error) {
+      lastError = includeVoice
+        ? "Could not connect the soundboard. Your original microphone is still connected."
+        : "Could not connect the soundboard. Audio is paused. Turn off to restore your microphone.";
+      publish();
+      if (!includeVoice) throw error;
+      return input;
+    }
+  }
+
   RTCPeerConnection.prototype.addTrack = function (...args) {
     watch(this);
-    const sender = native.addTrack.apply(this, args);
+    const input = originalTrack(args[0]);
+    args[0] = trackForSender(args[0]);
+    let sender;
+    try {
+      sender = native.addTrack.apply(this, args);
+    } catch (error) {
+      prune();
+      throw error;
+    }
     fallbackInputs.delete(sender);
     removedSenders.delete(sender);
-    const input = originalTrack(sender.track);
     if (enabled && eligible(input)) enqueue(sender, () => replace(sender, input)).catch(() => {});
     return sender;
   };
 
   RTCPeerConnection.prototype.addTransceiver = function (...args) {
     watch(this);
-    const transceiver = native.addTransceiver.apply(this, args);
-    if (enabled && eligible(transceiver.sender.track)) enqueue(transceiver.sender, () => replace(transceiver.sender, originalTrack(transceiver.sender.track))).catch(() => {});
+    const input = originalTrack(args[0]);
+    args[0] = trackForSender(args[0]);
+    let transceiver;
+    try {
+      transceiver = native.addTransceiver.apply(this, args);
+    } catch (error) {
+      prune();
+      throw error;
+    }
+    if (enabled && eligible(input)) enqueue(transceiver.sender, () => replace(transceiver.sender, input)).catch(() => {});
     return transceiver;
   };
 
@@ -246,7 +277,7 @@
     set(value) {
       native.enabled.set.call(this, value);
       const route = outputRoutes.get(this);
-      if (route) native.enabled.set.call(route.input, value);
+      if (route && routes.get(route.input) === route && this.readyState === "live") native.enabled.set.call(route.input, value);
       syncAll();
       publish();
     }
@@ -254,8 +285,9 @@
 
   MediaStreamTrack.prototype.stop = function () {
     const route = outputRoutes.get(this) || routes.get(this);
+    const active = route && routes.get(route.input) === route && this.readyState === "live";
     native.stop.call(this);
-    if (route) {
+    if (active) {
       native.stop.call(route.input);
       dispose(route);
     }
@@ -265,7 +297,7 @@
   };
 
   MediaStreamTrack.prototype.clone = function () {
-    const source = originalTrack(this);
+    const source = this.readyState === "ended" ? this : originalTrack(this);
     const cloned = native.clone.call(source);
     if (excluded.has(source)) excluded.add(cloned);
     if (microphones.has(source)) observeMicrophone(cloned);
@@ -306,7 +338,7 @@
         const route = outputRoutes.get(sender.track);
         const encodings = sender.getParameters().encodings;
         if (!includePaused && encodings?.length && encodings.every((encoding) => encoding.active === false)) continue;
-        if (route && routes.has(route.input) && route.input.readyState === "live") result.add(route);
+        if (route && routes.get(route.input) === route && route.input.readyState === "live" && route.output.readyState === "live") result.add(route);
       }
     }
     return [...result];

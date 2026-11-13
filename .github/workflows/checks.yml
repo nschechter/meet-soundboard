@@ -23,4 +23,4 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npx playwright install --with-deps chromium
       - run: npm test
-      - run: npm run package
+      - run: npm run package:candidate
