@@ -1,3 +1,4 @@
+:root { color-scheme: light dark; }
 body { width: 280px; margin: 0; padding: 24px; background: #f8f9f3; color: #233127; font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
 h1 { font-size: 20px; letter-spacing: -.5px; margin: 12px 0 5px; }
 p { color: #606e55; margin: 0 0 18px; }
@@ -5,3 +6,9 @@ button { width: 100%; padding: 12px; border: 1px solid #c6d798; border-radius: 9
 #message { font-size: 11px; margin: 13px 0; }
 a { color: #536b35; font-size: 12px; }
 button:focus-visible, a:focus-visible { outline: 3px solid #677f39; outline-offset: 3px; }
+@media (prefers-color-scheme: dark) {
+  body { background: #202124; color: #e8ece4; }
+  p { color: #b4bdad; }
+  a { color: #c9e7a3; }
+  button:focus-visible, a:focus-visible { outline-color: #c9e7a3; }
+}

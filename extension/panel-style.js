@@ -137,6 +137,47 @@ globalThis.MeetSoundboardStyle = `
   .stop { border: 1px solid #d2d9c6; border-radius: 8px; background: #fffef8; padding: 7px 10px; font-weight: 650; font-size: 11px; white-space: nowrap; }
   .stop:hover { border-color: #8e9f77; }
   .notice { font-size: 11px; line-height: 1.5; color: #805737; background: #fff2de; padding: 10px 12px; margin-top: 12px; border-radius: 9px; }
+  @media (prefers-color-scheme: dark) {
+    :host { color-scheme: dark; color: #e8ece4; --surface: #292c2a; --border: #41473e; --muted: #b4bdad; --accent: #c9e7a3; --hover: #343c2f; }
+    button:focus-visible, input:focus-visible, summary:focus-visible { outline-color: var(--accent); }
+    .panel, .controls { background: #202124; border-color: var(--border); }
+    .brand .wave, .tab[aria-selected="true"], .selection-length, .gain-value, .now-playing.active { color: var(--accent); }
+    .meet-badge, .tabs, kbd { border-color: var(--border); }
+    .icon-button, .eyebrow, .subtitle, .status-help, .tab, .sound-meta, .preview, .privacy-note, .library-note, .upload small, .drop-target p, .editor-status, .wave-times, .trim-fields label span, .gain-scale, .editor-hint, .editor-local, .empty, output, .setting, details, .now-playing { color: var(--muted); }
+    .icon-button:hover, .preview:hover, .reset-clip:hover, .add-card:hover { background: var(--hover); }
+    .connection { background: #2b3427; border-color: #46543b; }
+    .dot { background: #909b86; }
+    .connection[data-state="ready"] .dot { background: #b5da8d; box-shadow: 0 0 0 3px #435735; }
+    .connection[data-state="muted"] .dot, .connection[data-state="waiting"] .dot, .connection[data-state="paused"] .dot { background: #edba64; }
+    .power { background: var(--hover); border-color: #6f805d; }
+    .tab[aria-selected="true"] { border-bottom-color: var(--accent); }
+    .count { opacity: .85; }
+    .sound, .remove, #clip-name, .trim-fields input, .reset-clip, .stop, .editor-footer button { background: var(--surface); border-color: var(--border); }
+    .sound:hover, .stop:hover { border-color: #8a9d75; }
+    .sound.playing { background: #303c29; border-color: #b5d78e; box-shadow: inset 0 0 0 1px #b5d78e; }
+    .sound:has(.trigger:focus-visible) { outline-color: var(--accent); }
+    .sound.previewing { background: #322c3d; border-color: #bca2df; box-shadow: inset 0 0 0 1px #bca2df; }
+    .sound-icon, .purple .sound-icon { background: #3b3349; }
+    .orange .sound-icon { background: #463625; }
+    .yellow .sound-icon { background: #403d25; }
+    .green .sound-icon { background: #33432b; }
+    .blue .sound-icon { background: #2d3c4b; }
+    .edit-sound, .boost-clip { background: var(--hover); color: var(--accent); }
+    .preview:hover, .empty b, #clip-name, .trim-fields input { color: #e8ece4; }
+    #clip-name, .trim-fields input { border-color: #78856c; }
+    .remove, .selection-length.too-long { color: #ffbaaa; }
+    .add-card, .upload { background: #2a3125; border-color: #71825d; color: var(--accent); }
+    .add-card:hover { border-color: var(--accent); }
+    .drop-target { background: #232a20f5; border-color: var(--accent); }
+    .drop-target > span { background: #3a4a2d; }
+    .editor-preview, .editor-footer .editor-save { background: var(--accent); border-color: var(--accent); color: #1e2b18; }
+    .editor-preview:hover { background: #d8eebc; }
+    .editor-footer, footer { background: #252a24; border-color: var(--border); }
+    .editor-error { color: #ffbaaa; background: #422b27; }
+    input[type="range"], .setting input { accent-color: var(--accent); }
+    .now-playing.previewing { color: #cbb3e9; }
+    .notice { color: #f4c78e; background: #3b3022; }
+  }
   @media (max-height: 850px) { .panel { bottom: 82px; max-height: calc(100dvh - 100px); } .intro { display: none; } .trigger { padding: 9px 10px; } .sound-icon { width: 28px; height: 28px; font-size: 19px; margin-bottom: 6px; } .add-card { min-height: 44px; } }
   @media (max-width: 500px) { .panel { right: 12px; bottom: 80px; } }
   @media (max-width: 360px) { .builtin-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
