@@ -4,6 +4,6 @@ document.getElementById("open").addEventListener("click", async () => {
     await chrome.tabs.sendMessage(tab.id, { type: "toggle-soundboard" });
     window.close();
   } catch {
-    document.getElementById("message").textContent = "Open or reload a Google Meet tab, then try again.";
+    document.getElementById("message").textContent = "Open or reload a Google Meet, Teams, or Zoom web meeting tab, then try again.";
   }
 });

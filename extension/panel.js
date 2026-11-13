@@ -1,12 +1,16 @@
 (() => {
   "use strict";
   if (document.getElementById("meet-soundboard-root")) return;
+  const platform = MeetSoundboardPlatforms.current;
+  if (!platform) return;
+  const { savedSounds } = MeetSoundboardLibrary;
   const channel = "meet-soundboard-v1";
   const allSounds = MeetSoundboardSounds.sounds;
   const builtins = allSounds.filter((sound) => sound.library !== "quotes");
   const tabs = ["effects", "custom"];
   const host = document.createElement("div");
   host.id = "meet-soundboard-root";
+  host.dataset.platform = platform.id;
   host.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:2147483646;";
   document.documentElement.append(host);
   const root = host.attachShadow({ mode: "open" });
@@ -17,18 +21,18 @@
   const shell = document.createElement("div");
   shell.innerHTML = `
     <button class="launcher" style="pointer-events:auto" aria-label="Soundboard" title="Soundboard" aria-expanded="false" aria-controls="soundboard-panel">${wave} <span class="launcher-label">Soundboard</span></button>
-    <section class="panel" id="soundboard-panel" style="pointer-events:auto" role="region" aria-label="Meet Soundboard" hidden>
-      <header><div class="brand">${wave} Soundboard <span class="meet-badge">FOR MEET</span></div><button class="icon-button close" aria-label="Close soundboard">×</button></header>
+    <section class="panel" id="soundboard-panel" style="pointer-events:auto" role="region" aria-label="${platform.name} Soundboard" hidden>
+      <header><div class="brand">${wave} Soundboard <span class="meet-badge">FOR ${platform.name.toUpperCase()}</span></div><button class="icon-button close" aria-label="Close soundboard">×</button></header>
       <div class="intro"><p class="eyebrow">SET THE MOOD</p>
         <h1>Make some noise.</h1>
         <p class="subtitle">The right sound, right on cue.</p></div>
-        <div class="connection" data-state="off"><div class="status-row"><span class="dot"></span><span class="status-title" role="status">Soundboard is off</span><button class="power">Turn on</button></div><p class="status-help">Turn on to mix sounds with your Meet microphone and send them to the call.</p></div>
+        <div class="connection" data-state="off"><div class="status-row"><span class="dot"></span><span class="status-title" role="status">Soundboard is off</span><button class="power">Turn on</button></div><p class="status-help">Turn on to mix sounds with your ${platform.name} microphone and send them to the call.</p></div>
       <div class="scroll">
         <div class="notice" role="alert" hidden></div>
         <div class="tabs" role="tablist" aria-label="Sound library"><button class="tab" id="effects-tab" role="tab" aria-selected="true" aria-controls="effects-panel" data-tab="effects">Sound effects <span class="count">${builtins.length}</span></button><button class="tab" id="custom-tab" role="tab" aria-selected="false" aria-controls="custom-panel" tabindex="-1" data-tab="custom">My sounds <span class="count custom-count">0</span></button></div>
         <div id="effects-panel" role="tabpanel" aria-labelledby="effects-tab"><div class="grid builtin-grid"></div><p class="library-note"><span>${builtins.length} classic reactions. Perfect timing.</span><span>▷ = preview</span></p></div>
-        <div id="custom-panel" role="tabpanel" aria-labelledby="custom-tab" hidden><div class="grid custom-grid"></div><div class="empty"><b>Your own kind of funny.</b>Drop a clip. Find the good part. Make it yours.</div><button class="upload"><span class="upload-icon" aria-hidden="true">＋</span><span>Add a sound<small>or drop an audio file anywhere on this board</small></span></button><input class="file" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.webm,.flac,.aac" hidden><p class="privacy-note">Only add clips you have permission to use. Playing a saved clip shares it with this Meet page and, when sent to the meeting, its participants.</p><p class="library-note">Import up to 2 minutes / 10 MB. Save a clip up to 30 seconds. Stored on this device.</p></div>
-        <details><summary>A few things to know</summary><p>Audio is mixed in this Meet page. Nothing is recorded or sent to the developer. This is an independent extension, not made by Google.</p><p>Keep your Meet mic on to send effects. To play only effects, uncheck “Include my voice.”</p><p>If effects get filtered out, try turning off noise cancellation or Studio sound in Meet → Settings → Audio. Turn off Adaptive audio if Meet merges nearby computers. Use headphones for previews and local playback.</p><p>While this panel is focused: <kbd>1</kbd>–<kbd>9</kbd> play the first nine sounds in the Sound effects tab. <kbd>Esc</kbd> stops playback. The small ▷ buttons preview only for you.</p></details>
+        <div id="custom-panel" role="tabpanel" aria-labelledby="custom-tab" hidden><div class="grid custom-grid"></div><div class="empty"><b>Your own kind of funny.</b>Drop a clip. Find the good part. Make it yours.</div><button class="upload"><span class="upload-icon" aria-hidden="true">＋</span><span>Add a sound<small>or drop an audio file anywhere on this board</small></span></button><input class="file" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.webm,.flac,.aac" hidden><p class="privacy-note">Only add clips you have permission to use. Playing a saved clip shares it with this ${platform.name} page and, when sent to the meeting, its participants.</p><p class="library-note">Import up to 2 minutes / 10 MB. Save a clip up to 30 seconds. Stored on this device.</p></div>
+        <details><summary>A few things to know</summary>${platform.experimental ? "<p>This browser integration is experimental. Check with another participant before relying on it.</p>" : ""}<p>Audio is mixed in this ${platform.name} page. Nothing is recorded or sent to the developer. This is an independent extension, not made by ${platform.company}.</p><p>Keep your ${platform.name} mic on to send effects. To play only effects, uncheck “Include my voice.”</p><p>${platform.settingsHelp} Use headphones for previews and local playback.</p><p>While this panel is focused: <kbd>1</kbd>–<kbd>9</kbd> play the first nine sounds in the Sound effects tab. <kbd>Esc</kbd> stops playback. The small ▷ buttons preview only for you.</p></details>
       </div>
       <div class="controls"><div class="volume-row"><label class="volume-label" for="effect-volume">Effect volume</label><input id="effect-volume" type="range" min="0" max="100" value="65"><output for="effect-volume">65%</output></div><div class="settings-row"><label class="setting" for="include-voice" title="Only changes your voice while the soundboard is on"><input id="include-voice" type="checkbox" checked>Include my voice</label><label class="setting" for="hear-effects" title="Play effects on your device too. Use headphones to avoid echo."><input id="hear-effects" type="checkbox" checked>Hear effects too</label></div></div>
       <footer><span class="now-playing" role="status">Ready for your next cue</span><button class="stop">■ Stop all</button></footer>
@@ -37,7 +41,7 @@
   root.append(shell);
   const $ = (selector) => root.querySelector(selector);
 
-  function positionLauncher() {
+  function positionMeetLauncher() {
     const buttons = [...document.querySelectorAll('button, [role="button"]')]
       .map((element) => ({ element, box: element.getBoundingClientRect() }))
       .filter(({ box }) => box.width >= 32 && box.width <= 96 && box.height >= 32 && box.height <= 72
@@ -62,6 +66,31 @@
     host.style.setProperty("--launcher-bottom", `${Math.min(bottom, Math.max(12, innerHeight - 60))}px`);
   }
 
+  function positionLauncher() {
+    if (platform.id === "meet") return positionMeetLauncher();
+    const buttons = [...document.querySelectorAll('button, [role="button"]')]
+      .map((element) => ({ element, box: element.getBoundingClientRect() }))
+      .filter(({ box }) => box.width >= 24 && box.height >= 24 && box.left >= 0 && box.right <= innerWidth && box.top >= 0 && box.bottom <= innerHeight);
+    const inToolbar = ({ element, box }) => platform.id === "teams"
+      ? element.closest('[role="toolbar"][aria-label="Meeting controls"]')
+      : box.top > innerHeight - 112;
+    const anchor = buttons.find((button) => inToolbar(button) && /chat|people|participants|more/i.test(button.element.getAttribute("aria-label") || ""));
+    host.style.setProperty("--panel-top", `${anchor ? Math.min(200, anchor.box.bottom + 16) : 128}px`);
+    const candidates = [];
+    if (anchor) {
+      const center = anchor.box.top + anchor.box.height / 2;
+      const row = buttons.filter(({ box }) => Math.abs(box.top + box.height / 2 - center) < 12).sort((a, b) => a.box.left - b.box.left);
+      let first = row.indexOf(anchor);
+      while (first > 0 && row[first].box.left - row[first - 1].box.right < 48) first--;
+      candidates.push({ x: row[first].box.left - 64, y: center - 24 });
+    }
+    for (const bottom of [96, 160, 24]) candidates.push({ x: innerWidth - 72, y: innerHeight - bottom - 48 });
+    const position = candidates.find(({ x, y }) => x >= 12 && y >= 12 && x + 48 <= innerWidth && y + 48 <= innerHeight
+      && buttons.every(({ box }) => x + 52 <= box.left || x - 4 >= box.right || y + 52 <= box.top || y - 4 >= box.bottom)) || { x: 12, y: 140 };
+    host.style.setProperty("--launcher-right", `${innerWidth - position.x - 48}px`);
+    host.style.setProperty("--launcher-bottom", `${Math.max(12, innerHeight - position.y - 48)}px`);
+  }
+
   positionLauncher();
   window.addEventListener("resize", positionLauncher);
   setInterval(positionLauncher, 1000);
@@ -78,41 +107,17 @@
     onPreview: () => send("stop"),
     onClose: () => { setTab("custom"); $(".upload").focus(); },
     onSave: async (clip, existing) => {
-      await changeSounds((sounds) => {
-        if (!existing) return [...sounds, { ...clip, id: crypto.randomUUID() }];
-        const saved = sounds.find((sound) => sound.id === existing.id);
-        if (!saved) throw new Error("This sound was deleted in another tab. Cancel and add it again.");
-        if (saved.data !== existing.data || saved.name !== existing.name) throw new Error("This sound changed in another tab. Cancel and reopen it to edit the latest version.");
-        return sounds.map((sound) => sound.id === existing.id ? { ...clip, id: existing.id } : sound);
-      });
+      await changeSounds({ action: "save", clip, existing });
       if (existing?.id === current.playing) send("stop");
       notice(`${existing ? "Updated" : "Added"} ${clip.name}. Use ▷ to preview it.`);
     }
   });
 
-  function savedSounds(value) {
-    if (!Array.isArray(value)) return [];
-    const ids = new Set();
-    return value.slice(0, 12).filter((sound) => {
-      if (!sound || typeof sound.id !== "string" || !sound.id.length || sound.id.length > 80 || ids.has(sound.id)) return false;
-      if (typeof sound.name !== "string" || !sound.name.length || sound.name.length > 60) return false;
-      if (!Number.isFinite(sound.duration) || sound.duration <= 0 || sound.duration > 30) return false;
-      if (typeof sound.data !== "string" || !sound.data.length || sound.data.length > 2796204 || sound.data.length % 4 || !/^[A-Za-z0-9+/]*={0,2}$/.test(sound.data)) return false;
-      ids.add(sound.id);
-      return true;
-    }).map(({ id, name, duration, data }) => ({ id, name, duration, data }));
-  }
-
-  function changeSounds(change) {
-    return navigator.locks.request("meet-soundboard-library", async () => {
-      const stored = await chrome.storage.local.get("sounds");
-      const next = change(savedSounds(stored.sounds));
-      if (next.length > 12) throw new Error("Your board holds 12 custom sounds. Delete one to add another.");
-      if (JSON.stringify(next).length > 8 * 1024 * 1024) throw new Error("Your sound library is full. Delete a clip to make room.");
-      await chrome.storage.local.set({ sounds: next });
-      custom = next;
-      renderCustom();
-    });
+  async function changeSounds(change) {
+    const response = await chrome.runtime.sendMessage({ type: "change-library", ...change });
+    if (!response?.ok) throw new Error(response?.error || "Could not save your sound library. Try again.");
+    custom = savedSounds((await chrome.storage.local.get("sounds")).sounds);
+    renderCustom();
   }
 
   function send(type, payload = {}) {
@@ -167,8 +172,9 @@
       notice("Playing only for you. Meeting playback is paused.", current.state);
     }
     if (!preview && current.state !== "ready") {
+      if (current.state === "unavailable") { notice(`Cannot read your ${platform.name} mic state. Use ▷ to preview locally.`, current.state); return; }
       if (current.state === "paused") { notice("Soundboard audio is paused. Use ▷ to preview, or follow the reconnect steps above.", current.state); return; }
-      notice(current.enabled ? "Join the call and unmute in Meet before playing to everyone." : "Click Turn on first, or use ▷ to preview a sound.", current.state);
+      notice(current.enabled ? `Join the call and unmute in ${platform.name} before playing to everyone.` : "Click Turn on first, or use ▷ to preview a sound.", current.state);
       return;
     }
     try {
@@ -220,7 +226,7 @@
       remove.addEventListener("click", async (event) => {
         if (!event.isTrusted) return;
         try {
-          await changeSounds((sounds) => sounds.filter((entry) => entry.id !== sound.id));
+          await changeSounds({ action: "delete", id: sound.id });
           if (current.playing === sound.id) send("stop");
         } catch { notice("Could not delete that sound. Please try again."); }
       });
@@ -239,12 +245,13 @@
   }
 
   function update(status) {
-    const reconnectHelp = "To reconnect, turn the board off, mute and unmute in Meet, then turn the board back on.";
+    const reconnectHelp = `To reconnect, turn the board off, mute and unmute in ${platform.name}, then turn the board back on.`;
     const states = {
-      off: ["Soundboard is off", "Turn on to mix sounds with your Meet microphone and send them to the call."],
-      waiting: ["Waiting for meeting audio", "Join a call with your microphone on. Reload Meet if this stays here."],
-      ready: ["Connected to meeting audio", "If effects get cut off, turn off Studio sound or noise cancellation in Meet."],
-      muted: ["Your Meet mic is muted", "Unmute in Meet to send effects to the call."],
+      off: ["Soundboard is off", `Turn on to mix sounds with your ${platform.name} microphone and send them to the call.`],
+      waiting: ["Waiting for meeting audio", platform.waitingHelp],
+      ready: ["Connected to meeting audio", platform.audioHelp],
+      muted: [`Your ${platform.name} mic is muted`, `Unmute in ${platform.name} to send effects to the call.`],
+      unavailable: ["Cannot read microphone state", `Meeting playback is paused because the ${platform.name} mic control is unavailable. Use ▷ to preview locally.`],
       paused: ["Soundboard audio is paused", `${status.hearEffects === true ? "Sounds play only for you for now." : "Use ▷ to preview sounds."} ${reconnectHelp}`],
       suspended: ["Audio needs a click", "Click Resume to allow sound playback."]
     };
@@ -261,7 +268,7 @@
     $(".launcher").setAttribute("aria-label", $(".launcher-label").textContent);
     $(".launcher").title = $(".launcher-label").textContent;
     $(".power").textContent = status.state === "suspended" ? "Resume" : status.enabled ? "Turn off" : "Turn on";
-    $(".power").title = status.enabled && !status.includeVoice ? "Turning off restores your voice to Meet's microphone." : "";
+    $(".power").title = status.enabled && !status.includeVoice ? `Turning off restores your voice to ${platform.name}'s microphone.` : "";
     const localOnly = status.state === "paused" && status.hearEffects === true;
     for (const card of root.querySelectorAll(".sound")) {
       card.classList.toggle("playing", card.dataset.id === status.playing && !status.preview);
@@ -326,7 +333,7 @@
     if (event.target === $("#hear-effects") && !prefs.hearEffects && current.preview) send("stop");
     send("configure", prefs);
     clearTimeout(saveTimer);
-    const save = () => chrome.storage.local.set({ prefs }).catch(() => notice("Could not save settings. Reload the Meet tab."));
+    const save = () => chrome.storage.local.set({ prefs }).catch(() => notice(`Could not save settings. Reload the ${platform.name} tab.`));
     if (event.type === "input") saveTimer = setTimeout(save, 200);
     else void save();
   }
@@ -414,5 +421,5 @@
     renderCustom();
     send("configure", prefs);
     send("status");
-  }).catch(() => notice("Could not load your saved sounds. Reload the Meet tab."));
+  }).catch(() => notice(`Could not load your saved sounds. Reload the ${platform.name} tab.`));
 })();

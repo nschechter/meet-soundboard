@@ -19,12 +19,17 @@ assert len(manifest['description']) <= 132
 expected = {
     'manifest.json', 'sounds.js', 'audio.js', 'engine.js', 'panel.js',
     'panel-style.js', 'clip-editor.js', 'popup.html', 'popup.css', 'popup.js', 'SOUND-CREDITS.txt',
-    'privacy.html', 'icons/icon-16.png', 'icons/icon-48.png', 'icons/icon-128.png'
+    'platforms.js', 'library.js', 'background.js', 'privacy.html', 'icons/icon-16.png', 'icons/icon-48.png', 'icons/icon-128.png'
 }
 actual = {p.relative_to(extension).as_posix() for p in extension.rglob('*') if p.is_file()}
 assert actual == expected, f'Unexpected extension files: {actual ^ expected}'
+allowed = {'https://meet.google.com/*', 'https://teams.microsoft.com/*', 'https://teams.cloud.microsoft/*', 'https://teams.live.com/*'}
+for host in ['app.zoom.us', 'app.zoom.com', 'zoom.us', 'zoom.com']:
+    allowed.update({f'https://{host}/wc', f'https://{host}/wc/*'})
+assert manifest['background'] == {'service_worker': 'background.js'}
 for script in manifest['content_scripts']:
-    assert script['matches'] == ['https://meet.google.com/*']
+    assert set(script['matches']) == allowed
+    assert not script.get('all_frames', False)
     for name in script['js']:
         assert name in expected
 for file in extension.glob('*.js'):

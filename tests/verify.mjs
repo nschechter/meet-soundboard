@@ -8,9 +8,14 @@ import { importFile } from './import-file.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const extension = path.join(root, 'extension');
+const testURL = process.argv[2] || 'https://meet.google.com/soundboard-test';
+const origin = new URL(testURL).origin;
+const teams = new URL(testURL).hostname.startsWith('teams.');
+const output = path.join(root, 'test-results', new URL(testURL).hostname);
+await fs.mkdir(output, { recursive: true });
 const extensionId = createHash('sha256').update(await fs.realpath(extension)).digest('hex').slice(0, 32).replace(/[0-9a-f]/g, digit => String.fromCharCode(parseInt(digit, 16) + 97));
 const results = [];
-const context = await chromium.launchPersistentContext(path.join(root, 'test-results/browser-profile'), {
+const context = await chromium.launchPersistentContext(path.join(output, 'browser-profile'), {
   channel: 'chromium',
   headless: true,
   viewport: { width: 1440, height: 1060 },
@@ -45,7 +50,8 @@ await page.addInitScript(() => {
 const errors = [];
 page.on('pageerror', error => errors.push(error.message));
 const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Soundboard audio test</title></head><body style="background:#202124;color:#ddd;font-family:Arial;margin:36px"><p style="color:#9aa0a6;font-size:14px">MEET SOUNDBOARD / LOCAL AUDIO TEST</p><h1 style="font-weight:400;font-size:26px">A little more personality.</h1><div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:920px;margin-top:50px"><div style="background:#303134;height:290px;border-radius:18px;display:grid;place-items:center"><div style="width:100px;height:100px;display:grid;place-items:center;background:#5f7168;border-radius:50%;font-size:36px">N</div></div><div style="background:#303134;height:290px;border-radius:18px;display:grid;place-items:center"><div style="width:100px;height:100px;display:grid;place-items:center;background:#6a6281;border-radius:50%;font-size:36px">S</div></div></div><p style="position:fixed;bottom:26px;color:#aaa;font-size:13px">Local test room · No live meeting</p></body></html>`;
-await context.route('https://meet.google.com/**', route => route.fulfill({ status: 200, contentType: 'text/html', headers: { 'Content-Security-Policy': "require-trusted-types-for 'script'; trusted-types 'none'" }, body: html }));
+const meetingHTML = teams ? html.replace('</body>', '<button data-inp="microphone-button" data-state="mic-volume-renderer" aria-label="Mute mic">Mic</button></body>') : html;
+await context.route(`${origin}/**`, route => route.fulfill({ status: 200, contentType: 'text/html', headers: { 'Content-Security-Policy': "require-trusted-types-for 'script'; trusted-types 'none'" }, body: meetingHTML }));
 
 async function check(name, run) {
   await run();
@@ -80,8 +86,8 @@ async function expectAudio(predicate, description, key = 'analyser') {
 }
 
 try {
-  await page.goto('https://meet.google.com/soundboard-test');
-  await check('Manifest loads both extension worlds on Meet', async () => {
+  await page.goto(testURL);
+  await check('Manifest loads both extension worlds on the meeting origin', async () => {
     await page.locator('button.launcher').waitFor();
     assert.equal(await page.evaluate(() => window.__meetSoundboardInstalled), true);
     await page.locator('button.launcher').click();
@@ -188,7 +194,7 @@ try {
     await expectAudio(value => value < .005, 'Local playback never reaches the paused receiver');
     assert.equal(await page.evaluate(() => test.sender.getParameters().encodings[0].active), false);
     assert.equal(await page.locator('.now-playing').textContent(), 'Preview: Sad trombone');
-    await page.locator('.panel').screenshot({ path: path.join(root, 'test-results/paused-audio-preview.png') });
+    await page.locator('.panel').screenshot({ path: path.join(output, 'paused-audio-preview.png') });
     await page.evaluate(async () => {
       const parameters = test.sender.getParameters();
       parameters.encodings[0].active = true;
@@ -241,7 +247,77 @@ try {
     assert.ok(await sample() < .005);
   });
 
-  await check('Meet mute silences both voice and effects immediately', async () => {
+  if (teams) {
+    await check('Teams UI mute stops an active effect even when the outgoing track stays enabled', async () => {
+      await page.getByLabel('Hear effects too', { exact: true }).uncheck();
+      await page.getByRole('button', { name: 'Play Sad trombone to meeting', exact: true }).click();
+      await expectAudio(value => value > .01, 'The effect reaches the receiver before Teams mute');
+      const outputEnabled = await page.evaluate(async () => {
+        document.querySelector('[data-inp="microphone-button"]').dataset.state = 'mic-off';
+        await Promise.resolve();
+        return test.sender.track.enabled;
+      });
+      assert.equal(outputEnabled, false);
+      await expectAudio(value => value < .005, 'Teams UI mute silences the active effect');
+      await waitState('muted');
+      assert.equal(await page.evaluate(() => test.track.enabled), true);
+      await page.getByRole('button', { name: 'Play Correct! to meeting', exact: true }).click();
+      assert.ok(await sample() < .005);
+      assert.equal(await page.locator('.sound.playing').count(), 0);
+    });
+    await check('Teams unmute resumes new effects without replaying the interrupted clip', async () => {
+      await page.evaluate(() => document.querySelector('[data-inp="microphone-button"]').dataset.state = 'mic-volume-renderer');
+      await waitState('ready');
+      assert.ok(await sample() < .005);
+      await page.getByRole('button', { name: 'Play Correct! to meeting', exact: true }).click();
+      await expectAudio(value => value > .015, 'New effects reach the receiver after Teams unmute');
+      await page.getByRole('button', { name: '■ Stop all', exact: true }).click();
+    });
+    await check('Unknown, missing, or disabled Teams microphone controls block outgoing sound', async () => {
+      await page.getByLabel('Include my voice', { exact: true }).check();
+      for (const change of ['unknown', 'missing', 'disabled', 'duplicate']) {
+        await page.evaluate(change => {
+          const button = document.querySelector('[data-inp="microphone-button"]');
+          window.savedMicButton = button;
+          if (change === 'unknown') button.dataset.state = 'unrecognized';
+          if (change === 'missing') button.remove();
+          if (change === 'disabled') button.disabled = true;
+          if (change === 'duplicate') document.body.append(button.cloneNode(true));
+        }, change);
+        await waitState('unavailable');
+        await expectAudio(value => value < .005, `${change} mic state silences the mix`);
+        await page.getByRole('button', { name: 'Play Correct! to meeting', exact: true }).click();
+        assert.ok(await sample() < .005);
+        await page.getByRole('button', { name: 'Preview Correct! only for me', exact: true }).click();
+        await expectAudio(value => value > .01, 'Private preview stays available', 'localAnalyser');
+        assert.ok(await sample() < .005);
+        await page.getByRole('button', { name: '■ Stop all', exact: true }).click();
+        await page.evaluate(() => {
+          document.querySelectorAll('[data-inp="microphone-button"]').forEach(button => { if (button !== savedMicButton) button.remove(); });
+          savedMicButton.dataset.state = 'mic-volume-renderer';
+          savedMicButton.disabled = false;
+          if (!savedMicButton.isConnected) document.body.append(savedMicButton);
+        });
+        await waitState('ready');
+        await expectAudio(value => value > .05, 'Voice recovers when Teams mic state is known');
+      }
+    });
+    await check('Teams mute detection uses state attributes and leaves the original track unchanged', async () => {
+      await page.evaluate(() => {
+        const button = document.querySelector('[data-inp="microphone-button"]');
+        button.setAttribute('aria-label', 'Activer le micro');
+        button.dataset.state = 'mic-off';
+      });
+      await waitState('muted');
+      await expectAudio(value => value < .005, 'Teams mute silences voice regardless of label language');
+      assert.equal(await page.evaluate(() => test.track.enabled), true);
+      await page.evaluate(() => document.querySelector('[data-inp="microphone-button"]').dataset.state = 'mic-volume-renderer');
+      await waitState('ready');
+      await page.getByLabel('Hear effects too', { exact: true }).check();
+    });
+  }
+
+  await check('Meeting track mute silences both voice and effects immediately', async () => {
     await page.getByLabel('Include my voice', { exact: true }).check();
     await page.getByRole('button', { name: 'Play Air horn to meeting', exact: true }).click();
     await expectAudio(value => value > .05, 'Audio reaches receiver before muting');
@@ -499,7 +575,7 @@ try {
     await custom.click();
     assert.equal(await page.locator('.scroll').evaluate(element => element.scrollTop), 0);
     await page.locator('.notice').evaluate(element => element.hidden = true);
-    await page.locator('.panel').screenshot({ path: path.join(root, 'test-results/custom-preview.png') });
+    await page.locator('.panel').screenshot({ path: path.join(output, 'custom-preview.png') });
     await effects.click();
   });
 
@@ -508,7 +584,7 @@ try {
     root.querySelector('.notice').hidden = true;
     root.querySelector('.scroll').scrollTop = 0;
   });
-  await page.locator('.panel').screenshot({ path: path.join(root, 'test-results/soundboard-preview.png') });
+  await page.locator('.panel').screenshot({ path: path.join(output, 'soundboard-preview.png') });
   await check('Closing the call clears the connected state', async () => {
     await page.evaluate(() => { window.test.left.close(); window.test.right.close(); });
     await waitState('waiting');
@@ -526,13 +602,13 @@ try {
         assert.ok(control.y >= scroll.y + scroll.height - 1 && control.y + control.height <= box.y + box.height);
       }
       await page.getByRole('button', { name: '■ Stop all', exact: true }).click();
-      await page.locator('.panel').screenshot({ path: path.join(root, `test-results/panel-${viewport.width}.png`) });
+      await page.locator('.panel').screenshot({ path: path.join(output, `panel-${viewport.width}.png`) });
       await page.getByRole('tab', { name: 'My sounds' }).click();
       for (const selector of ['.tabs', '.connection', '.controls', '.stop']) {
         const bounds = await page.locator(selector).boundingBox();
         assert.ok(bounds.x >= 0 && bounds.y >= 0 && bounds.x + bounds.width <= viewport.width && bounds.y + bounds.height <= viewport.height, `${selector} at ${viewport.width}`);
       }
-      await page.locator('.panel').screenshot({ path: path.join(root, `test-results/custom-${viewport.width}.png`) });
+      await page.locator('.panel').screenshot({ path: path.join(output, `custom-${viewport.width}.png`) });
       await page.getByRole('tab', { name: 'Sound effects' }).click();
     }
   });
@@ -548,7 +624,7 @@ try {
 
   assert.deepEqual(errors, []);
   console.log(`\n${results.length} checks passed. No browser errors.`);
-  await fs.writeFile(path.join(root, 'test-results/results.json'), JSON.stringify({ checks: results, browser: context.browser()?.version(), errors }, null, 2));
+  await fs.writeFile(path.join(output, 'results.json'), JSON.stringify({ url: testURL, checks: results, browser: context.browser()?.version(), errors }, null, 2));
 } finally {
   await context.close();
 }

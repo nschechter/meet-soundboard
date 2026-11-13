@@ -1,15 +1,19 @@
-# Meet Soundboard
+# Meeting Soundboard Beta
 
-A Chrome extension that adds a soundboard to Google Meet. Play classic reactions or your own clips through your meeting audio, without sharing your screen.
+This branch tests Teams and Zoom browser support alongside Google Meet. Version 1.6.1 is experimental. A live Teams personal call passed effects-only playback, mute, and unmute recovery using a separate browser session. Voice and effects together and Teams work accounts still need live testing. Zoom is untested on the live service. Desktop apps are not supported. See [browser testing](docs/BROWSER-TESTING.md).
 
-This is an unreleased candidate. The requested Applause, Quack, Dramatic boom, Tomato splat, Crickets, Laugh track, I'll be back, Punch, and Luigi Yahoo! are included as built-in defaults. The publisher has chosen to retain them with redistribution rights still unverified. It has not been published to the Chrome Web Store. It is an independent project and is not made or endorsed by Google.
+The Meet-only 1.5.15 package was submitted by the publisher. Existing store assets and release-review notes describe that package, not this beta.
+
+A Chrome extension that adds a soundboard to browser meetings. Play classic reactions or your own clips through your meeting audio, without sharing your screen.
+
+This is an unreleased candidate. The requested Applause, Quack, Dramatic boom, Tomato splat, Crickets, Laugh track, I'll be back, Punch, and Luigi Yahoo! are included as built-in defaults. The publisher has chosen to retain them with redistribution rights still unverified. This beta has not been submitted to the Chrome Web Store. It is an independent project and is not made or endorsed by Google, Microsoft, or Zoom.
 
 ## Install
 
 1. Download or clone this repository.
 2. Open `chrome://extensions` in Chrome and turn on Developer mode.
 3. Click **Load unpacked** and select the `extension` folder.
-4. Open or reload Google Meet after your current call ends.
+4. Open or reload Google Meet, Teams, or Zoom in Chrome after your current call ends.
 
 The extension folder is ready to load. No build step or extra audio driver is needed. The declared minimum is Chrome 114. Automated checks currently run on Chromium 158, so that minimum is an API requirement, not a promise that every older release has been tested.
 
@@ -29,7 +33,7 @@ Meet mute silences both voice and effects. Use headphones for previews and local
 
 **My sounds** accepts a file from the picker or a drop anywhere on the open board. Import up to 2 minutes and 10 MB, then save up to 30 seconds. Drag the waveform handles to select the part to keep and adjust its volume up to 300%. **Play selection**, directly below the waveform, previews that part with your volume changes. Only you hear it. **Reset** restores the full selection and original volume. Use **Edit** on a saved sound to change it later. Saving keeps only the selected audio, so keep the source file if you might need it again.
 
-The library holds up to 12 clips and 8 MB of saved data. Edited clips use mono WAV audio and stay within the 2 MB playback limit. Clips and settings stay in Chrome's local extension storage. Imports and editor previews do not pass audio bytes into the Meet page. Previewing a saved card or playing it does. Playing to the meeting sends it to participants through Meet.
+The library holds up to 12 clips and 8 MB of saved data. Edited clips use mono WAV audio and stay within the 2 MB playback limit. Clips and settings stay in Chrome's local extension storage. Imports and editor previews do not pass audio bytes into the meeting page. Previewing a saved card or playing it does. Playing to the meeting sends it to participants through the meeting service.
 
 The included effects are Air horn, Applause, Ba dum tss, Correct!, BOOOOO!, Luigi Yahoo!, Tomato splat, I'll be back, Punch, Laugh track, Cha-ching!, Quack, Crickets, Sad trombone, and Dramatic boom.
 
@@ -37,9 +41,9 @@ This candidate includes the requested I'll be back movie quote and Luigi Yahoo! 
 
 ## Privacy and limits
 
-The extension works only on `https://meet.google.com/*`. It uses Meet's existing microphone tracks. It does not record calls, send analytics, or send audio to the developer. Read the [privacy policy](docs/PRIVACY.md) and [security notes](SECURITY.md).
+The extension runs on the meeting hosts listed in the manifest. It uses existing outgoing browser audio tracks. Teams and Zoom compatibility is still being tested. It does not record calls, send analytics, or send audio to the developer. Read the [privacy policy](docs/PRIVACY.md) and [security notes](SECURITY.md).
 
-The mixer runs in the Meet page because it needs access to outgoing audio. It shares that page's trust boundary. A connected status confirms the browser audio route, not whether another participant can hear it. Changes to Meet can affect compatibility.
+The mixer runs in the meeting page because it needs access to outgoing audio. It shares that page's trust boundary. A connected status confirms the browser audio route, not whether another participant can hear it. Changes to meeting apps can affect compatibility.
 
 If audio behaves unexpectedly, turn the soundboard off. Reloading the extension also requires reloading Meet after the call. Gmail's embedded Meet, mobile apps, and Safari are not supported.
 
@@ -63,12 +67,6 @@ The store ZIP is written to `dist` with `manifest.json` at the root. Packaging v
 To rebuild the audio, install Python 3 and FFmpeg with `libmp3lame`, then run `npm run build:audio`. Source files, source links, processing settings, and current rights information are included. Encoding can differ between FFmpeg versions. No download is needed to build or run the extension.
 
 See [testing](docs/TESTING.md) and the [release review](docs/RELEASE-REVIEW.md) before publishing.
-
-Version 1.5.15 is saved as an unpublished Chrome Web Store draft under Ponerian. The [store listing](docs/STORE-LISTING.md), [reviewer notes](docs/STORE-REVIEWER-SUMMARY.txt), and [store images](store/assets) are saved in the dashboard. The tester reported that the basic two-device check worked with this build in a live Meet call. The individual checks still unconfirmed are listed in [TESTING.md](docs/TESTING.md). The matching privacy policy and testing notes are included in this release.
-
-Version 1.5.15 fixes two audio bugs found during release review. New microphone tracks go through the mixer before they can send audio, so effects-only mode does not briefly expose the raw microphone. Retired soundboard tracks can no longer mute or stop the microphone that is still in use. Cloning an ended track keeps it ended.
-
-All 74 automated checks passed. The basic two-device test passed by user report. The updated package, listing text, screenshots, and reviewer notes are saved in the store draft. It has not been submitted.
 
 `npm run package:candidate` creates a local review ZIP. CI uses this command to check packaging without making a publication decision. The publisher has chosen to keep the requested recordings. `npm run package -- --allow-unverified-audio` creates the release ZIP with those recordings and their existing rights disclosures. That option does not grant rights or change the recorded licenses.
 

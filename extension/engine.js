@@ -2,6 +2,8 @@
   "use strict";
   if (globalThis.__meetSoundboardInstalled || !globalThis.RTCPeerConnection) return;
   globalThis.__meetSoundboardInstalled = true;
+  const platform = globalThis.MeetSoundboardPlatforms?.current;
+  const platformName = platform?.name || "Meet";
   const channel = "meet-soundboard-v1";
   const native = {
     addTrack: RTCPeerConnection.prototype.addTrack,
@@ -59,7 +61,8 @@
   }
 
   function syncRoute(route) {
-    const audible = route.input.readyState === "live" && route.input.enabled && !route.input.muted && !microphoneMuted();
+    const meetingUnmuted = !platform?.microphoneState || platform.microphoneState() === "unmuted";
+    const audible = meetingUnmuted && route.input.readyState === "live" && route.input.enabled && !route.input.muted && !microphoneMuted();
     native.enabled.set.call(route.output, audible);
     route.voice.gain.value = !enabled || includeVoice ? 1 : 0;
   }
@@ -351,6 +354,10 @@
     let state = "off";
     if (enabled) {
       state = context?.state !== "running" ? "suspended" : !live.length ? "waiting" : !active.length ? "paused" : !audible.length ? "muted" : "ready";
+      if (live.length && context?.state === "running" && platform?.microphoneState) {
+        const microphoneState = platform.microphoneState();
+        if (microphoneState !== "unmuted") state = microphoneState === "muted" ? "muted" : "unavailable";
+      }
     }
     return { state, enabled, volume, hearEffects, includeVoice, playing: playing?.id || null, preview: !!playing?.preview, error: lastError };
   }
@@ -384,7 +391,7 @@
         const bytes = MeetSoundboardAudio.bytes(message.builtin);
         const loading = context.decodeAudioData(bytes).catch(() => {
           buffers.delete(message.builtin);
-          throw new Error("This effect could not load. Reload Meet and try again.");
+          throw new Error(`This effect could not load. Reload ${platformName} and try again.`);
         });
         buffers.set(message.builtin, loading);
       }
@@ -412,7 +419,7 @@
     await context.resume();
     if (generation !== playbackGeneration) return;
     if (!message.preview && status().state !== "ready") {
-      throw new Error(enabled ? "Join the call and unmute in Meet before playing to everyone." : "Turn on the soundboard first.");
+      throw new Error(enabled ? `Join the call and unmute in ${platformName} before playing to everyone.` : "Turn on the soundboard first.");
     }
     const buffer = await loadBuffer(message);
     if (generation !== playbackGeneration) return;
@@ -487,6 +494,18 @@
       publish();
     });
   });
+
+  if (platform?.microphoneState) {
+    let previousMicrophoneState = platform.microphoneState();
+    new MutationObserver(() => {
+      const next = platform.microphoneState();
+      if (next === previousMicrophoneState) return;
+      previousMicrophoneState = next;
+      syncAll();
+      if (playing && !playing.preview && next !== "unmuted") stopPlayback();
+      publish();
+    }).observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ["data-state", "data-inp", "disabled", "aria-disabled"] });
+  }
 
   setInterval(() => {
     syncAll();

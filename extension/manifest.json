@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Meet Soundboard",
-  "version": "1.5.15",
-  "description": "A soundboard inside Google Meet. Play classic reaction sounds or your own clips into your meeting audio.",
+  "name": "Meeting Soundboard Beta",
+  "version": "1.6.1",
+  "description": "A soundboard for Google Meet, with experimental Teams and Zoom browser support. Play reactions or your own clips.",
   "minimum_chrome_version": "114",
   "permissions": [
     "storage"
@@ -13,15 +13,27 @@
     "128": "icons/icon-128.png"
   },
   "action": {
-    "default_title": "Meet Soundboard",
+    "default_title": "Meeting Soundboard Beta",
     "default_popup": "popup.html"
   },
   "content_scripts": [
     {
       "matches": [
-        "https://meet.google.com/*"
+        "https://meet.google.com/*",
+        "https://teams.microsoft.com/*",
+        "https://teams.cloud.microsoft/*",
+        "https://teams.live.com/*",
+        "https://app.zoom.us/wc",
+        "https://app.zoom.us/wc/*",
+        "https://app.zoom.com/wc",
+        "https://app.zoom.com/wc/*",
+        "https://zoom.us/wc",
+        "https://zoom.us/wc/*",
+        "https://zoom.com/wc",
+        "https://zoom.com/wc/*"
       ],
       "js": [
+        "platforms.js",
         "sounds.js",
         "audio.js",
         "engine.js"
@@ -31,9 +43,22 @@
     },
     {
       "matches": [
-        "https://meet.google.com/*"
+        "https://meet.google.com/*",
+        "https://teams.microsoft.com/*",
+        "https://teams.cloud.microsoft/*",
+        "https://teams.live.com/*",
+        "https://app.zoom.us/wc",
+        "https://app.zoom.us/wc/*",
+        "https://app.zoom.com/wc",
+        "https://app.zoom.com/wc/*",
+        "https://zoom.us/wc",
+        "https://zoom.us/wc/*",
+        "https://zoom.com/wc",
+        "https://zoom.com/wc/*"
       ],
       "js": [
+        "platforms.js",
+        "library.js",
         "sounds.js",
         "panel-style.js",
         "clip-editor.js",
@@ -42,5 +67,9 @@
       "run_at": "document_idle",
       "world": "ISOLATED"
     }
-  ]
+  ],
+  "version_name": "1.6.1 experimental",
+  "background": {
+    "service_worker": "background.js"
+  }
 }
