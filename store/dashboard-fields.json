@@ -9,9 +9,9 @@
   "visibility": "Public",
   "requestedPublicationTiming": "Deferred publication",
   "publicationTimingSet": false,
-  "homepageUrl": "https://github.com/nschechter/meet-soundboard",
-  "supportUrl": "https://github.com/nschechter/meet-soundboard/issues",
-  "privacyPolicyUrl": "https://github.com/nschechter/meet-soundboard/blob/main/docs/PRIVACY.md",
+  "homepageUrl": "https://github.com/nschechter/meeting-soundboard",
+  "supportUrl": "https://github.com/nschechter/meeting-soundboard/issues",
+  "privacyPolicyUrl": "https://github.com/nschechter/meeting-soundboard/blob/main/docs/PRIVACY.md",
   "singlePurpose": "Let users play built-in or locally saved sound effects into their own outgoing Google Meet audio, with controls for preview, volume, voice inclusion, and stopping playback.",
   "storagePermissionJustification": "Save imported audio clips and playback preferences in Chrome's local extension storage. The library is limited to 12 clips and 8 MB. Chrome sync storage is not used.",
   "meetSiteAccessJustification": "Run only on https://meet.google.com/* to show the soundboard and mix effects with Meet's existing outgoing microphone track. The mixer runs in the page's MAIN world to access WebRTC audio senders. The panel and saved-clip validation run in Chrome's isolated extension world. No chat messages or participant lists are collected.",
@@ -21,7 +21,7 @@
     "Personal communications",
     "Website content"
   ],
-  "reviewerInstructions": "No extension login. Use desktop Chrome, your Meet account, headphones, and a muted second device in an empty call. Turn off Adaptive audio and noise cancellation/Studio sound. Reload Meet, join with mic on, open the waveform button, then Turn on. Test voice + effects, effects only while changing mics, Meet mute, local preview, Stop all, off/on, and drag/drop with trim preview. Audio terms: SOUND-CREDITS.txt. Full checks: https://github.com/nschechter/meet-soundboard/blob/main/docs/TESTING.md",
+  "reviewerInstructions": "No extension login. Use desktop Chrome, your Meet account, headphones, and a muted second device in an empty call. Turn off Adaptive audio and noise cancellation/Studio sound. Reload Meet, join with mic on, open the waveform button, then Turn on. Test voice + effects, effects only while changing mics, Meet mute, local preview, Stop all, off/on, and drag/drop with trim preview. Audio terms: SOUND-CREDITS.txt. Full checks: https://github.com/nschechter/meeting-soundboard/blob/main/docs/TESTING.md",
   "traderStatus": "Trader",
   "publisher": "Ponerian"
 }

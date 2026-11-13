@@ -35,6 +35,6 @@ Edit files in `extension/`, reload the extension, and refresh the meeting tab. N
 
 Run `npm run package:candidate` for a ZIP in `dist/`. On Linux, add `--with-deps` when installing Chromium.
 
-[Compatibility and testing](docs/BROWSER-TESTING.md) · [Privacy](docs/PRIVACY.md) · [Security](SECURITY.md)
+[Compatibility and testing](docs/TESTING.md) · [Publishing](docs/STORE-LISTING.md) · [Privacy](docs/PRIVACY.md) · [Security](SECURITY.md)
 
 Code uses [MIT](LICENSE). Audio has separate terms, including recordings with unverified redistribution rights. See [sound credits](extension/SOUND-CREDITS.txt).
