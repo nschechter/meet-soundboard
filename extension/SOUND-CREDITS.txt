@@ -1,6 +1,6 @@
 MEET SOUNDBOARD AUDIO CREDITS
 
-The standard 1.5.15 candidate uses the requested Golf Clap, Quack,
+The bundled sound pack uses the requested Golf Clap, Quack,
 Dramatic boom, Tomato Squash, Awkward cricket, Funny Laugh Track,
 I'll be back, Punch Effect, and Luigi - Yahoo recordings.
 Their redistribution clearance is unresolved.

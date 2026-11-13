@@ -16,6 +16,8 @@ globalThis.MeetSoundboardStyle = `
   .launcher .wave i:nth-child(2), .launcher .wave i:nth-child(4) { height: 16px; }
   .launcher .wave i:nth-child(3) { height: 24px; }
   .launcher-label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  :host([data-platform="teams"]) .launcher { border-radius: 6px; background: #f5f5f5; color: #424242; }
+  :host([data-platform="teams"]) .launcher:hover { background: #e6e6e6; }
   .wave { display: inline-flex; height: 23px; align-items: center; gap: 3px; }
   .wave i { width: 3px; border-radius: 3px; background: currentColor; height: 9px; }
   .wave i:nth-child(2), .wave i:nth-child(4) { height: 17px; }
@@ -36,7 +38,7 @@ globalThis.MeetSoundboardStyle = `
   .status-row { display: flex; align-items: center; gap: 8px; }
   .dot { width: 7px; height: 7px; border-radius: 100%; background: #a0a58e; flex: none; }
   .connection[data-state="ready"] .dot { background: #4c7a31; box-shadow: 0 0 0 3px #d2e3bd; }
-  .connection[data-state="muted"] .dot, .connection[data-state="waiting"] .dot, .connection[data-state="paused"] .dot { background: #b98425; }
+  .connection[data-state="muted"] .dot, .connection[data-state="waiting"] .dot, .connection[data-state="paused"] .dot, .connection[data-state="unavailable"] .dot { background: #b98425; }
   .status-title { font-size: 12px; font-weight: 650; flex: 1; }
   .power { padding: 5px 9px; font-size: 11px; font-weight: 650; border: 1px solid #c5d2b1; border-radius: 6px; background: #f8faef; }
   .status-help { font-size: 11px; color: #5c694f; margin: 7px 0 0 15px; line-height: 1.5; }
@@ -139,6 +141,8 @@ globalThis.MeetSoundboardStyle = `
   .notice { font-size: 11px; line-height: 1.5; color: #805737; background: #fff2de; padding: 10px 12px; margin-top: 12px; border-radius: 9px; }
   @media (prefers-color-scheme: dark) {
     :host { color-scheme: dark; color: #e8ece4; --surface: #292c2a; --border: #41473e; --muted: #b4bdad; --accent: #c9e7a3; --hover: #343c2f; }
+    :host([data-platform="teams"]) .launcher { background: #292929; color: #e8ece4; }
+    :host([data-platform="teams"]) .launcher:hover { background: #3d3d3d; }
     button:focus-visible, input:focus-visible, summary:focus-visible { outline-color: var(--accent); }
     .panel, .controls { background: #202124; border-color: var(--border); }
     .brand .wave, .tab[aria-selected="true"], .selection-length, .gain-value, .now-playing.active { color: var(--accent); }
@@ -148,7 +152,7 @@ globalThis.MeetSoundboardStyle = `
     .connection { background: #2b3427; border-color: #46543b; }
     .dot { background: #909b86; }
     .connection[data-state="ready"] .dot { background: #b5da8d; box-shadow: 0 0 0 3px #435735; }
-    .connection[data-state="muted"] .dot, .connection[data-state="waiting"] .dot, .connection[data-state="paused"] .dot { background: #edba64; }
+    .connection[data-state="muted"] .dot, .connection[data-state="waiting"] .dot, .connection[data-state="paused"] .dot, .connection[data-state="unavailable"] .dot { background: #edba64; }
     .power { background: var(--hover); border-color: #6f805d; }
     .tab[aria-selected="true"] { border-bottom-color: var(--accent); }
     .count { opacity: .85; }
@@ -182,5 +186,6 @@ globalThis.MeetSoundboardStyle = `
   @media (max-width: 500px) { .panel { right: 12px; bottom: 80px; } }
   @media (max-width: 360px) { .builtin-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-height: 500px) { .panel { bottom: 12px; max-height: calc(100dvh - 24px); } }
+  @media (min-height: 600px) { :host([data-platform="teams"]) .panel { top: var(--panel-top, 128px); bottom: 24px; max-height: calc(100dvh - var(--panel-top, 128px) - 24px); } }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 `;

@@ -2,7 +2,7 @@
 
 The publisher reported submitting Meet Soundboard 1.5.15 under Ponerian. Approval and public availability have not been confirmed. The store item ID is `fponfnfbnfidambdifaclnfedhbbgcdh`.
 
-Teams and experimental Zoom support are on the separate [browser meeting beta branch](https://github.com/nschechter/meeting-soundboard/tree/experimental/browser-meetings). The saved store copy describes the submitted Meet-only release.
+The main branch now contains Meeting Soundboard 1.6.2 for Meet and Teams. This update has not been submitted. Zoom remains on the [beta branch](https://github.com/nschechter/meeting-soundboard/tree/experimental/browser-meetings). The saved store copy still describes the submitted Meet-only release.
 
 ## Listing and reviewer copy
 
@@ -10,7 +10,7 @@ Teams and experimental Zoom support are on the separate [browser meeting beta br
 
 Use its `reviewerInstructions` text for the dashboard's reviewer field. The full setup and checks are in [Testing](TESTING.md#live-test-setup). No extension login or paid account is required beyond access to the meeting service.
 
-For a beta release, update the saved name, descriptions, site-access explanation, privacy policy, and screenshots to match the packaged services. Do not reuse the Meet-only disclosures unchanged.
+Before submitting 1.6.2, update the saved name, descriptions, site-access explanation, reviewer notes, and screenshots for Meet and Teams. The package accesses `meet.google.com`, `teams.microsoft.com`, `teams.cloud.microsoft`, and `teams.live.com`. It has no Zoom access.
 
 ## Privacy answers
 
@@ -27,7 +27,7 @@ The saved Meet-only answers describe one purpose: playing effects into the user'
 
 These answers reflect the extension's behavior. Check the current dashboard fields and [Google's User Data FAQ](https://developer.chrome.com/docs/webstore/program-policies/user-data-faq) when preparing an update. Local processing should still be disclosed. Data is not sold or used for unrelated purposes, lending, or credit decisions.
 
-Keep the [hosted privacy policy](https://github.com/nschechter/meeting-soundboard/blob/main/docs/PRIVACY.md) aligned with the submitted build. This branch's [privacy policy](PRIVACY.md) describes the Meet-only release. The bundled `extension/privacy.html` provides the same policy offline.
+Keep the [hosted privacy policy](https://github.com/nschechter/meeting-soundboard/blob/main/docs/PRIVACY.md) aligned with the submitted build. This branch's [privacy policy](PRIVACY.md) covers Meet and Teams, with the older Meet-only release identified separately. The bundled `extension/privacy.html` provides the same policy offline.
 
 ## Store images
 
@@ -57,4 +57,4 @@ Check Google's [listing instructions](https://developer.chrome.com/docs/webstore
 3. Match the listing copy, privacy answers, hosted policy, reviewer notes, and images to the exact package being uploaded. Confirm support and privacy links work.
 4. Review the dashboard, choose publication timing, and submit. Confirm the resulting status before describing the update as submitted or published.
 
-See Google's [submission instructions](https://developer.chrome.com/docs/webstore/publish) for the current dashboard flow. Historical findings are in the [archived release review](archive/RELEASE-REVIEW-1.5.md).
+See Google's [submission instructions](https://developer.chrome.com/docs/webstore/publish) for the current dashboard flow.

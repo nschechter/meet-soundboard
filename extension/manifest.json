@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Meet Soundboard",
-  "version": "1.5.15",
-  "description": "A soundboard inside Google Meet. Play classic reaction sounds or your own clips into your meeting audio.",
+  "name": "Meeting Soundboard",
+  "version": "1.6.2",
+  "description": "A soundboard for Google Meet and Microsoft Teams in Chrome. Play classic reactions or your own clips into meeting audio.",
   "minimum_chrome_version": "114",
   "permissions": [
     "storage"
@@ -13,15 +13,19 @@
     "128": "icons/icon-128.png"
   },
   "action": {
-    "default_title": "Meet Soundboard",
+    "default_title": "Meeting Soundboard",
     "default_popup": "popup.html"
   },
   "content_scripts": [
     {
       "matches": [
-        "https://meet.google.com/*"
+        "https://meet.google.com/*",
+        "https://teams.microsoft.com/*",
+        "https://teams.cloud.microsoft/*",
+        "https://teams.live.com/*"
       ],
       "js": [
+        "platforms.js",
         "sounds.js",
         "audio.js",
         "engine.js"
@@ -31,9 +35,14 @@
     },
     {
       "matches": [
-        "https://meet.google.com/*"
+        "https://meet.google.com/*",
+        "https://teams.microsoft.com/*",
+        "https://teams.cloud.microsoft/*",
+        "https://teams.live.com/*"
       ],
       "js": [
+        "platforms.js",
+        "library.js",
         "sounds.js",
         "panel-style.js",
         "clip-editor.js",
@@ -42,5 +51,8 @@
       "run_at": "document_idle",
       "world": "ISOLATED"
     }
-  ]
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
 }

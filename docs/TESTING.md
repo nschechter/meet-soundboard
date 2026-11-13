@@ -1,25 +1,25 @@
 # Testing
 
-This branch contains Meet Soundboard 1.5.15. Teams and Zoom work is on the separate [browser meeting beta branch](https://github.com/nschechter/meeting-soundboard/tree/experimental/browser-meetings). Results below identify which build was tested.
+This branch contains Meeting Soundboard 1.6.2 for Meet and Teams. Zoom stays on the separate [beta branch](https://github.com/nschechter/meeting-soundboard/tree/experimental/browser-meetings). Results below identify which build was tested.
 
 ## Compatibility
 
 | Service | Current coverage |
 | --- | --- |
-| Google Meet | Basic two-device test passed on 1.5.15. Repeat the checklist below for beta releases. |
+| Google Meet | Basic two-device test passed on 1.5.15. Repeat the checklist below for new releases. |
 | Teams personal | Effects, mute, and unmute passed in a live 1.6.1 call. Voice and microphone switching still need live checks. |
 | Teams work accounts | Automated checks only. Live testing is still needed. |
-| Zoom web meetings | Experimental, with automated checks only. Audio paths outside standard WebRTC are unsupported. |
+| Zoom web meetings | Not included on `main`. The beta has automated checks only and still needs live testing. |
 
 Use desktop Chrome and open the meeting website directly. Native apps, mobile apps, and embedded meeting frames are unsupported. The extension never changes meeting audio settings automatically.
 
-The Teams beta also checks the meeting's microphone button. If its state is unknown, outgoing effects pause and local previews remain available. Changes to meeting controls can affect compatibility.
+The Teams integration also checks the meeting's microphone button. If its state is unknown, outgoing effects pause and local previews remain available. Changes to meeting controls can affect compatibility.
 
 ## Automated checks
 
 Follow the [development setup](../README.md#development), then run `npm test`. Reports go into `test-results/`.
 
-The suite covers voice and effect mixing, mute, microphone changes, stopped tracks, failed connections, previews, saved clips, imports, trimming, volume, permissions, layout, keyboard use, and accessibility. It uses generated audio and real WebRTC peers on local test pages in isolated Chromium profiles. It does not record people or test the meeting services themselves.
+The suite covers voice and effect mixing, mute, microphone changes, stopped tracks, failed connections, previews, shared clips across Meet and Teams, imports, trimming, volume, permissions, layout, keyboard use, and accessibility. It also checks that Zoom pages cannot load the main build. It uses generated audio and real WebRTC peers on local test pages in isolated Chromium profiles. It does not record people or test the meeting services themselves.
 
 Run `npm run package:candidate` to create a review ZIP in `dist/`. Packaging checks permissions, included files, JavaScript syntax, ZIP integrity, and the audio license list. It writes a SHA-256 checksum. Packaging does not run the tests.
 
@@ -63,8 +63,6 @@ Record the build, ZIP checksum, browser version, operating system, audio device,
 | November 12, 2026 | Meet 1.5.15, exact store ZIP, two devices | User reported the basic test worked with voice and local playback enabled. Mute, voice exclusion, private previews, microphone changes, cleanup, and rejoin were not separately confirmed. |
 | November 13, 2026 | Teams personal 1.6.1, receiver in a private window on the same computer | User heard the unmuted ding, confirmed silence for muted applause, and heard a new ding after unmuting without rejoining. Sender voice and local playback were off. |
 
-The Teams result does not confirm voice mixing, microphone changes, muting during an active effect, preview privacy, or microphone restoration in a live call. Teams work accounts and Zoom still need live testing.
+The Teams result does not confirm voice mixing, microphone changes, muting during an active effect, preview privacy, or microphone restoration in a live call. Teams work accounts still need live testing. No live test has been recorded for the exact 1.6.2 package.
 
 The tested Meet 1.5.15 ZIP has SHA-256 `cc74f302ce8d29937e148d3ba5c57fa6d509605398dc8cc69bd9bdb643b2083e`. That test used macOS and the built-in MacBook Pro microphone. The live Chrome version and receiving device model were not recorded.
-
-Earlier findings are kept in the [archived release review](archive/RELEASE-REVIEW-1.5.md).

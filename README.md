@@ -1,8 +1,8 @@
-# Meet Soundboard
+# Meeting Soundboard
 
-Play sound effects in Google Meet, right from the call. Use 15 built-in sounds or drop in your own clips to trim and adjust their volume.
+Play sound effects in Google Meet and Microsoft Teams, right from the call. Use 15 built-in sounds or drop in your own clips to trim and adjust their volume.
 
-Requires desktop Chrome. Teams and experimental Zoom support are available on the [beta branch](https://github.com/nschechter/meeting-soundboard/tree/experimental/browser-meetings).
+Requires desktop Chrome. Experimental Zoom support stays on the [beta branch](https://github.com/nschechter/meeting-soundboard/tree/experimental/browser-meetings).
 
 ## Install
 

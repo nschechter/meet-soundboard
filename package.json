@@ -4,7 +4,7 @@
     "playwright": "1.65.0"
   },
   "name": "meet-soundboard",
-  "version": "1.5.15",
+  "version": "1.6.2",
   "license": "MIT",
   "private": true,
   "scripts": {
